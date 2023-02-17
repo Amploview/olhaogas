@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="styles/style.css" />
+<title>{{ .Title }}</title>
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>{{ .Header }}</h1>
+			<h2>Cadastro Cliente</h2>
+		</div>
+		<div id="menu">
+			<ul>
+				<li class="menuitem"><a href="{{ .Host }}/"><h1>::</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Cadastros"><h1>Cadastros</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Relatorios"><h1>Relatórios</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
+			</ul>
+		</div>
+
+		<div id="content">
+
+			<script type="text/javascript">
+				function onsubmitform() {
+				        var selecionado;
+					if (document.pressed == 'Inserir') {
+						if (document.getElementsByName("nome")[0].value == null
+								|| document.getElementsByName("nome")[0].value == "") {
+							alert('Nome não preenchido!');
+							return false;
+						}
+						if (document.getElementsByName("endereco")[0].value == null
+								|| document.getElementsByName("endereco")[0].value == "") {
+							alert('Endereco não preenchido!');
+							return false;
+						}
+						if (document.getElementsByName("area")[0].value == null
+								|| document.getElementsByName("area")[0].value == "") {
+							alert('Area não preenchida!');
+							return false;
+						}
+						if (document.getElementsByName("ddi_whatsap")[0].value == null
+								|| document.getElementsByName("ddi_whatsap")[0].value == "") {
+							alert('DDI não preenchido!');
+							return false;
+						}
+						if (document.getElementsByName("ddd_whatsap")[0].value == null
+								|| document.getElementsByName("ddd_whatsap")[0].value == "") {
+							alert('DDD não preenchido!');
+							return false;
+						}
+						//if (document.getElementsByName("celular_whatsap")[0].value == null
+						//		|| document.getElementsByName("celular_whatsap")[0].value == "") {
+						//	alert('Celular não preenchido!');
+						//	return false;
+						//}
+						if (document.getElementsByName("cep")[0].value == null
+								|| document.getElementsByName("cep")[0].value == "") {
+							
+							//alert('CEP não preenchido!');
+							//return false;
+							document.getElementsByName("cep")[0].value = '99999';
+						}
+						if (document.getElementsByName("referencia")[0].value == null
+								|| document.getElementsByName("referencia")[0].value == "") {
+							//alert('Referencia não preenchida!');
+							//return false;
+							document.getElementsByName("referencia")[0].value = 'S/Ref.';
+						}
+						if (document.getElementsByName("email")[0].value == null
+								|| document.getElementsByName("email")[0].value == "") {
+							//alert('Email não preenchido!');
+							//return false;
+							document.getElementsByName("email")[0].value = 'xxx@gmail.com';
+						}
+						document.myform1.action = "{{ .Host }}/CadastroCliente";
+					} else if (document.pressed == 'Localizar') {
+						document.myform1.action = "{{ .Host }}/CadastroCliente";
+					} else if (document.pressed == 'Recuperar') {
+						document.getElementsByName("nome")[0].value = "<%out.print(request.getParameter("nome"));%>";
+						document.getElementsByName("endereco")[0].value = "<%out.print(request.getParameter("endereco"));%>";
+						document.getElementsByName("area")[0].value = "<%out.print(request.getParameter("area"));%>";
+						document.getElementsByName("ddd_whatsap")[0].value = "<%out.print(request.getParameter("ddd_whatsap"));%>";
+						document.getElementsByName("cep")[0].value = "<%out.print(request.getParameter("cep"));%>";
+						document.getElementsByName("referencia")[0].value = "<%out.print(request.getParameter("referencia"));%>";
+						document.getElementsByName("email")[0].value = "<%out.print(request.getParameter("email"));%>";
+						return false;
+					} else if (document.pressed == 'Pedido') {
+						var selecionado = false;
+						for (var i = 0; i < document.getElementsByName("id").length; i++) {
+							if (document.getElementsByName("id")[i].checked) {
+								selecionado = true;
+							}
+						}
+						if (!selecionado) {
+							alert('Registro não selecionado para ser efetuado o pedido!');
+							return false;
+						} else {
+							document.myform2.action = "{{ .Host }}/CadastroPedido";
+						}
+					} else if (document.pressed == 'Eliminar') {
+						var selecionado = false;
+						for (var i = 0; i < document.getElementsByName("id").length; i++) {
+							if (document.getElementsByName("id")[i].checked) {
+								selecionado = true;
+							}
+						}
+						if (!selecionado) {
+							alert('Registro não selecionado para ser eliminado!');
+							return false;
+						} else {
+							document.myform2.action = "{{ .Host }}/CadastroCliente";
+						}
+					} else if (document.pressed == 'Alterar') {
+						var dados_nao_informados = true;
+						if (document.getElementsByName("nome")[0].value != null
+								&& document.getElementsByName("nome")[0].value != "") {
+							dados_nao_informados = false;
+						}
+						if (document.getElementsByName("endereco")[0].value != null
+								&& document.getElementsByName("endereco")[0].value != "") {
+							dados_nao_informados = false;
+						}
+						if (document.getElementsByName("area")[0].value == null
+								|| document.getElementsByName("area")[0].value == "") {
+							dados_nao_informados = false;
+						}
+						if (document.getElementsByName("ddi_whatsap")[0].value != null
+								&& document.getElementsByName("ddi_whatsap")[0].value != "") {
+							dados_nao_informados = false;
+						}
+						if (document.getElementsByName("ddd_whatsap")[0].value != null
+								&& document.getElementsByName("ddd_whatsap")[0].value != "") {
+							dados_nao_informados = false;
+						}
+						//if (document.getElementsByName("celular_whatsap")[0].value != null
+						//		&& document.getElementsByName("celular_whatsap")[0].value != "") {
+						//	dados_nao_informados = false;
+						//}
+						if (document.getElementsByName("cep")[0].value != null
+								&& document.getElementsByName("cep")[0].value != "") {
+							dados_nao_informados = false;
+						}
+						if (document.getElementsByName("referencia")[0].value != null
+								&& document.getElementsByName("referencia")[0].value != "") {
+							dados_nao_informados = false;
+						}
+						if (document.getElementsByName("email")[0].value != null
+								&& document.getElementsByName("email")[0].value != "") {
+							dados_nao_informados = false;
+						}
+						if (dados_nao_informados) {
+							alert('Nome, endereco, area, ddi, ddd, celular, cep, referencia e ou email não preenchidos!');
+							return false;
+						} else {
+							var selecionado = false;
+							for (var i = 0; i < document
+									.getElementsByName("id").length; i++) {
+								if (document.getElementsByName("id")[i].checked) {
+									selecionado = true;
+								}
+							}
+							if (!selecionado) {
+								alert('Registro não selecionado para ser alterado!');
+								return false;
+							} else {
+								document.getElementsByName("nome_myform1")[0].value = document
+										.getElementsByName("nome")[0].value;
+								document.getElementsByName("endereco_myform1")[0].value = document
+										.getElementsByName("endereco")[0].value;
+								document.getElementsByName("area_myform1")[0].value = document
+										.getElementsByName("area")[0].value;
+								document.getElementsByName("ddi_whatsap_myform1")[0].value = document
+										.getElementsByName("ddi_whatsap")[0].value;
+								document.getElementsByName("ddd_whatsap_myform1")[0].value = document
+										.getElementsByName("ddd_whatsap")[0].value;
+								document.getElementsByName("celular_whatsap_myform1")[0].value = document
+										.getElementsByName("celular_whatsap")[0].value;
+								document.getElementsByName("cep_myform1")[0].value = document
+										.getElementsByName("cep")[0].value;
+								document.getElementsByName("referencia_myform1")[0].value = document
+										.getElementsByName("referencia")[0].value;
+								document.getElementsByName("email_myform1")[0].value = document
+										.getElementsByName("email")[0].value;
+								document.myform2.action = "AlterarCliente.jsp";
+							}
+						}
+					}
+					return true;
+				}
+				function copyToClipboard(text) {
+					var selecionado = false;
+					for (var i = 0; i < document.getElementsByName("id").length; i++) {
+						if (document.getElementsByName("id")[i].checked) {
+							selecionado = true;
+						  	window.prompt('Click Ctrl+C', document.getElementsByName("url")[i].value);
+						}
+					}
+					if (!selecionado) {
+						alert('Registro não selecionado para copiar URL!');
+						return false;
+					}
+				}
+			</script>
+
+			<div id="content_top"></div>
+			<div id="content_main">
+				<script type="text/javascript">
+					function validaemail(inputText) {
+						var retorno = true;
+						// Match the date format through regular expression  
+						if (!document.myform1.email.value = '') {
+							if (!inputText.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/)) {
+								alert('Formato do email \"' + inputText + '\" est� invalido!\nDigite novamente!');
+								document.myform1.email.value = '';
+								document.myform1.email.focus();
+								retorno = false;
+							}
+						}
+						return retorno;
+					}
+				</script>
+				<form name="myform1" onsubmit="return onsubmitform();">
+					<h1>
+						Nome&nbsp;:&nbsp;<input type="text" name="nome">
+					</h1>
+					<h1>
+						Endereco&nbsp;:&nbsp;<input type="text" name="endereco">
+					</h1>
+					<h1>
+						Area&nbsp;:&nbsp;<input type="text" name="area">
+						<h1>
+							(DDD)Telefone&nbsp;:&nbsp;<input type="hidden" name="ddi_whatsap" value="55" min="1" step="1" max="999" maxlength="3"><input type="number" name="ddd_whatsap" value="21" min="1" step="1" max="99" maxlength="2">-<input type="number" name="celular_whatsap" min="1" step="1" max="999999999" maxlength="9">
+						</h1>
+						<h1>
+							Cep/Referencia&nbsp;:&nbsp;<input type="number" name="cep" min="1" step="1" max="99999" maxlength="5" value="">/<input type="text" name="referencia" value="">
+						</h1>
+						<h1>
+							Email&nbsp;:&nbsp;<input type="email" name="email"
+								pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"	onchange="validaemail(document.myform1.email.value)" title="Formato de email obrigat�rio, por exemplo abc@cde.com.br" value="">
+						</h1>
+<!--						<br>
+						<h1>
+							Avise g�s no final&nbsp;:&nbsp;Sim
+						</h1> -->
+						<br>
+						<table border="1" align="left">
+							<tr>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Inserir">
+									</h1>
+								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Localizar">
+									</h1>
+								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Recuperar">
+									</h1>
+								</td>
+							</tr>
+						</table> <br><br><br>
+				</form>
+<button id="demo" onclick="copyToClipboard(document.getElementById('demo').innerHTML)">Copiar URL</button>
+ <!--
+	<a href="/<%=deposito%>/cadastro_cliente.jsp?flg_pagina=<%out.print(pagina_anterior);%>">P�gina&nbsp;anterior&nbsp;[<%out.print(pagina_anterior==0?1:pagina_anterior + 1);%> de <%out.print(total_paginas);%>]</a><br>
+	<a href="/<%=deposito%>/cadastro_cliente.jsp?flg_pagina=<%out.print(pagina_posterior);%>">P�gina&nbsp;posterior&nbsp;[<%out.print(pagina_posterior==1?2:pagina_posterior);%> de <%out.print(total_paginas);%>]</a>
+ -->
+			</div>
+			<div id="content_bottom"></div>
+		</div>
+	</div>
+</body>
+</html>

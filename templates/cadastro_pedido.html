@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="styles/style.css" />
+<title>{{ .Title }}</title>
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>{{ .Header }}</h1>
+			<h2>Cadastro Pedido</h2>
+		</div>
+		<div id="menu">
+			<ul>
+				<li class="menuitem"><a href="{{ .Host }}/"><h1>::</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Cadastros"><h1>Cadastros</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Relatorios"><h1>Relatórios</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
+			</ul>
+		</div>
+
+		<div id="content">
+
+			<script type="text/javascript">
+	function onsubmitform()
+	{
+	     var selecionado;
+	     var id_pedido_selecionado;
+	     if (document.pressed == 'Inserir') {
+			if ((document.getElementsByName("id_glp")[0].value == null ||  
+				document.getElementsByName("id_glp")[0].value == "")) {
+				alert('Glp não preenchido!');
+				return false;
+			}
+			if ((document.getElementsByName("quantidade")[0].value == null ||  
+				document.getElementsByName("quantidade")[0].value == "")) {
+				alert('quantidade não preenchida!');
+				return false;
+			}
+			if ((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||  
+				document.getElementsByName("flg_prioridade_pedido")[0].value == "")) {
+				alert('Prioridade não preenchida!');
+				return false;
+			}
+			if ((document.getElementsByName("flg_hora")[0].value == null ||  
+				document.getElementsByName("flg_hora")[0].value == "")) {
+				alert('horário não preenchido!');
+				return false;
+			}
+			document.myform1.action = "{{ .Host }}/CadastroPedido";
+	     } else if (document.pressed == 'Localizar') {
+			document.myform1.action = "{{ .Host }}/CadastroPedido";
+	     } else if (document.pressed == 'Eliminar') {
+			selecionado = false;
+			for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+				if (document.getElementsByName("id_pedido")[i].checked) {
+					selecionado = true;
+				}
+			}
+			if (!selecionado) {
+				alert('Registro não selecionado para ser eliminado!');
+				return false;
+			} else {
+			  	document.myform2.action = "{{ .Host }}/CadastroPedido";
+			}
+	     } else if (document.pressed == 'Confirmar') {
+				id_pedido_selecionado = null;
+				selecionado = false;
+				for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+					if (document.getElementsByName("id_pedido")[i].checked) {
+						selecionado = true;
+						id_pedido_selecionado = i;
+					}
+				}
+				if (id_pedido_selecionado != null) {
+					if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
+						if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
+							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "1" || document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
+								alert('Registro selecionado já foi confirmado e ou registrado problema!');
+								return false;
+							}
+							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
+								alert('Registro selecionado já foi cancelado, portanto não pode ser confirmado!');
+								return false;
+							}
+						}
+					}	
+				}
+				if (!selecionado) {
+					alert('Registro não selecionado para ser confirmado!');
+					return false;
+				} else {
+				  	document.myform2.action = "{{ .Host }}/CadastroPedido";
+				}
+	     } else if (document.pressed == 'Cancelar') {
+				id_pedido_selecionado = null;
+				selecionado = false;
+				for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+					if (document.getElementsByName("id_pedido")[i].checked) {
+						selecionado = true;
+						id_pedido_selecionado = i;
+					}
+				}
+				if (id_pedido_selecionado != null) {
+					if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
+						if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
+							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
+								alert('Registro selecionado já foi cancelado!');
+								return false;
+							}
+							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "1" || document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
+								alert('Registro selecionado já foi confirmado e ou registrado problema, portanto não pode ser cancelado!');
+								return false;
+							}
+						}
+					}	
+				}
+				if (!selecionado) {
+					alert('Registro não selecionado para ser cancelado!');
+					return false;
+				} else {
+				  	document.myform2.action = "{{ .Host }}/CadastroPedido";
+				}
+	     } else if (document.pressed == 'Registrar problema') {
+				id_pedido_selecionado = null;
+				selecionado = false;
+				for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+					if (document.getElementsByName("id_pedido")[i].checked) {
+						selecionado = true;
+						id_pedido_selecionado = i;
+					}
+				}
+				if (id_pedido_selecionado != null) {
+					if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
+						if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
+							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
+								alert('Registro selecionado já foi registrado problema!');
+								return false;
+							}
+							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
+								alert('Registro selecionado já foi cancelado, portanto não pode registrado problema!');
+								return false;
+							}
+							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "1") {
+								alert('Registro de problema só é possivel para pedidos confirmados, portanto não pode ser registrado problema para este pedido!');
+								return false;
+							}
+						}
+					}	
+				}
+				if (!selecionado) {
+					alert('Registro não selecionado para ser registrado problema!');
+					return false;
+				} else {
+				  	document.myform2.action = "{{ .Host }}/CadastroPedido";
+				}
+	     } else if (document.pressed == 'Alterar') {
+			id_pedido_selecionado = null;
+			selecionado = false;
+			if ((document.getElementsByName("id_glp")[0].value == null ||  
+				document.getElementsByName("id_glp")[0].value == "")) {
+				selecionado = true;
+			}
+			if ((document.getElementsByName("quantidade")[0].value == null ||  
+				document.getElementsByName("quantidade")[0].value == "")) {
+				selecionado = true;
+			}
+			if ((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||  
+				document.getElementsByName("flg_prioridade_pedido")[0].value == "")) {
+				selecionado = true;
+			}
+			if ((document.getElementsByName("flg_hora")[0].value == null ||  
+				document.getElementsByName("flg_hora")[0].value == "")) {
+				selecionado = true;
+			}
+			if (!selecionado) {
+				alert('Glp, prioridade, horário e ou quantidade não preenchidos!');
+				return false;
+			} else {
+				selecionado = false;
+				for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+					if (document.getElementsByName("id_pedido")[i].checked) {
+						selecionado = true;
+						id_pedido_selecionado = i;
+					}
+				}
+				if (!selecionado) {
+					alert('Registro não selecionado para ser alterado!');
+					return false;
+				} else {
+					if (!((document.getElementsByName("id_glp")[0].value == null ||
+						document.getElementsByName("id_glp")[0].value == ""))) {
+							document.getElementsByName("id_glp_myform1")[0].value = 
+								document.getElementsByName("id_glp")[0].value;
+					}
+					if (!((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||
+						document.getElementsByName("flg_prioridade_pedido")[0].value == ""))) {
+							document.getElementsByName("flg_prioridade_pedido_myform1")[0].value = 
+								document.getElementsByName("flg_prioridade_pedido")[0].value;
+					}
+					if (!((document.getElementsByName("quantidade")[0].value == null ||
+						document.getElementsByName("quantidade")[0].value == ""))) {
+							document.getElementsByName("quantidade_myform1")[0].value = 
+								document.getElementsByName("quantidade")[0].value;
+					}
+					if (!((document.getElementsByName("flg_hora")[0].value == null ||
+						document.getElementsByName("flg_hora")[0].value == ""))) {
+							document.getElementsByName("flg_hora_myform1")[0].value = 
+								document.getElementsByName("flg_hora")[0].value;
+					}
+					document.myform2.action = "{{ .Host }}/CadastroPedido";
+				}
+			}
+	     }
+	     return true;
+	}
+	</script>
+
+			<div id="content_top"></div>
+			<div id="content_main">
+				<form name="myform1" onsubmit="return onsubmitform();">
+					<input type="hidden" name="id_cliente" value="<%out.println(id_cliente);%>"> 
+					<input type="hidden" name="flg_origem_pedido" value="1"> 
+								<h1>
+									Glp&nbsp;:&nbsp;<input type="text" name="glp">
+									<h1>
+										Quantidade&nbsp;:&nbsp;<input type="number" name="quantidade" min="1" step="1" max="100" value="1">
+									</h1>
+									<h1>
+										Prioridade pedido&nbsp;:&nbsp;<select name="flg_prioridade_pedido"><option value=""></option><option value="0">Hoje</option><option value="1">Amanh�</option></select>
+									</h1>
+										<br>
+									<h1>
+										Horário:&nbsp;<select name="flg_hora"><option value=""></option><option value="0">Qualquer hora</option><option value="8">8 horas</option><option value="9">9 horas</option><option value="10">10 horas</option><option value="11">11 horas</option><option value="12">12 horas</option><option value="13">13 horas</option><option value="14">14 horas</option><option value="15">15 horas</option><option value="16">16 horas</option><option value="17">17 horas</option><option value="18">18 horas</option><option value="19">19 horas</option><option value="20">20 horas</option></select>
+									</h1>
+									<br>
+					<table border="1" align="left">
+					<tr><td>
+					<h1><input type="submit" name="operation" onclick="document.pressed=this.value" value="Inserir"></h1>
+					</td><td>
+					<h1><input type="submit" name="operation" onclick="document.pressed=this.value" value="Localizar"></h1>
+					</td></tr>
+					</table>
+					<br><br><br>
+				</form>
+		<!--
+		<a href="/<%=deposito%>/cadastro_pedido.jsp?id_cliente=<%out.print(id_cliente);%>&flg_pagina=<%out.print(pagina_anterior);%>">P�gina&nbsp;anterior&nbsp;[<%out.print(pagina_anterior==0?1:pagina_anterior + 1);%> de <%out.print(total_paginas);%>]</a><br>
+	<a href="/<%=deposito%>/cadastro_pedido.jsp?id_cliente=<%out.print(id_cliente);%>&flg_pagina=<%out.print(pagina_posterior);%>">P�gina&nbsp;posterior&nbsp;[<%out.print(pagina_posterior==1?2:pagina_posterior);%> de <%out.print(total_paginas);%>]</a>
+	-->
+			</div>
+			<div id="content_bottom"></div>
+
+		</div>
+	</div>
+</body>
+</html>

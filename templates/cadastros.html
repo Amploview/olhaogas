@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="styles/style.css" />
+<title>{{ .Title }}</title>
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>{{ .Header }}</h1>
+			<h2>Cadastros</h2>
+		</div>
+		<div id="menu">
+			<ul>
+				<li class="menuitem"><a href="{{ .Host }}/"><h1>::</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroArea"><h1>Area</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroGlp"><h1>Glp</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroPreco"><h1>Preco</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroCliente"><h1>Cliente</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroCobertura"><h1>Cobertura</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroUsuario"><h1>Usuario</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroPedido"><h1>Pedido</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

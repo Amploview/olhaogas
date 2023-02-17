@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="styles/style.css" />
+<title>{{ .Title }}</title>
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>{{ .Header }}</h1>
+			<h2>Relatório Preço</h2>
+		</div>
+		<div id="menu">
+			<ul>
+				<li class="menuitem"><a href="{{ .Host }}/"><h1>::</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Cadastros"><h1>Cadastros</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Relatorios"><h1>Relatórios</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
+			</ul>
+		</div>
+
+		<div id="content">
+
+
+			<div id="content_top"></div>
+			<div id="content_main">
+				<form action="{{ .Host }}/RelatorioPreco" method="get">
+					 <h1>
+						Glp&nbsp;:&nbsp;<h1><input type="text" name="glp">
+					</h1>
+						<h1>
+							Area&nbsp;:&nbsp;<h1><input type="text" name="area">
+						</h1>
+				</form>
+			</div>
+			<div id="content_bottom"></div>
+
+		</div>
+	</div>
+</body>
+</html>

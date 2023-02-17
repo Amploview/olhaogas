@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="styles/style.css" />
+<title>{{ .Title }}</title>
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>{{ .Header }}</h1>
+			<h2>Relatório Cliente</h2>
+		</div>
+		<div id="menu">
+			<ul>
+				<li class="menuitem"><a href="{{ .Host }}/"><h1>::</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Cadastros"><h1>Cadastros</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Relatorios"><h1>Relatórios</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
+			</ul>
+		</div>
+
+		<div id="content">
+			<div id="content_top"></div>
+			<div id="content_main">
+				<form action="relatorio_cliente.jsp" method="get">
+					<h1>
+						Nome&nbsp;:&nbsp;<input type="text" name="nome">
+					</h1>
+					<h1>
+						Endereco&nbsp;:&nbsp;<input type="text" name="endereco">
+					</h1>
+					<h1>
+						Area&nbsp;:&nbsp;<input type="text" name="area">
+						<h1>
+							DDI&nbsp;:&nbsp;<input type="text" name="ddi_whatsap" value="55">
+						</h1>
+						<h1>
+							DDD&nbsp;:&nbsp;<input type="text" name="ddd_whatsap" value="21">
+						</h1>
+						<h1>
+							Celular&nbsp;:&nbsp;<input type="text" name="celular_whatsap">
+						</h1>
+						<h1>
+							Cep&nbsp;:&nbsp;<input type="text" name="cep">
+						</h1>
+						<h1>
+							Referencia&nbsp;:&nbsp;<input type="text" name="referencia">
+						</h1>
+						<h1>
+							Email&nbsp;:&nbsp;<input type="text" name="email">
+						</h1>
+						<br>
+							<h1>
+								<input type="submit" value="Consultar">
+							</h1>
+				</form>
+			</div>
+			<div id="content_bottom"></div>
+
+		</div>
+	</div>
+</body>
+</html>
