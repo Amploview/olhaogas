@@ -1,0 +1,9 @@
+curl -fsSL https://get.deta.dev/space-cli.sh | sh
+https://deta.space/
+clicar no icone 'Type command o search', uma bola rosa com um ponto escuro, e selecionar settings, e acionar 'Generate Tocken'
+/home/evandro/.detaspace/bin/space login
+/home/evandro/.detaspace/bin/space new
+/home/evandro/.detaspace/bin/space push
+/home/evandro/.detaspace/bin/space release
+go build -o olhaogas-go-site .
+./olhaogas-go-site
