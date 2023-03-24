@@ -47,6 +47,14 @@ func genericExecTemplate(w http.ResponseWriter, r *http.Request, html string, tm
 	//println("Operacao : " + r.Form.Get("operation"))
 	//println("Html : " + html)
 	//println("Action :" + strings.Trim(html, ".html"))
+	if r.Form.Get("operation") == "" {
+		for i := 0; i < sizeRows; i++ {
+			d.TabelaIds[i] = ""
+			for j := 0; j < sizeCols; j++ {
+				d.TabelaDados[i][j] = ""
+			}
+		}
+	}
 	switch strings.Trim(html, ".html") {
 	case "olhaogas":
 		println("é olhaogas")
@@ -98,98 +106,99 @@ func main() {
 	r := mux.NewRouter()
 
 	//Declare Tabela
-	var Tabela [sizeRows][sizeCols]string
+	var TabelaIds [sizeRows]string
+	var TabelaDados [sizeRows][sizeCols]string
 	//Menu e demais
-	data_olhaogas := data{title, header, host, db, Tabela}
+	data_olhaogas := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplolhaogas := template.Must(template.ParseFiles("templates/olhaogas.html"))
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "olhaogas.html", *tmplolhaogas, &data_olhaogas)
 	})
-	data_cadastros := data{title, header, host, db, Tabela}
+	data_cadastros := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplcadastros := template.Must(template.ParseFiles("templates/cadastros.html"))
 	r.HandleFunc("/Cadastros", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "cadastros.html", *tmplcadastros, &data_cadastros)
 	})
-	data_relatorios := data{title, header, host, db, Tabela}
+	data_relatorios := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplrelatorios := template.Must(template.ParseFiles("templates/relatorios.html"))
 	r.HandleFunc("/Relatorios", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "relatorios.html", *tmplrelatorios, &data_relatorios)
 	})
-	data_sobre := data{title, header, host, db, Tabela}
+	data_sobre := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplsobre := template.Must(template.ParseFiles("templates/sobre.html"))
 	r.HandleFunc("/Sobre", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "sobre.html", *tmplsobre, &data_sobre)
 	})
 
 	//Cadastros
-	data_cadastroarea := data{title, header, host, db, Tabela}
+	data_cadastroarea := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplcadastroarea := template.Must(template.ParseFiles("templates/cadastro_area.html"))
 	r.HandleFunc("/CadastroArea", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "cadastro_area.html", *tmplcadastroarea, &data_cadastroarea)
 	})
-	data_cadastroglp := data{title, header, host, db, Tabela}
+	data_cadastroglp := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplcadastroglp := template.Must(template.ParseFiles("templates/cadastro_glp.html"))
 	r.HandleFunc("/CadastroGlp", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "cadastro_glp.html", *tmplcadastroglp, &data_cadastroglp)
 	})
-	data_cadastropreco := data{title, header, host, db, Tabela}
+	data_cadastropreco := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplcadastropreco := template.Must(template.ParseFiles("templates/cadastro_preco.html"))
 	r.HandleFunc("/CadastroPreco", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "cadastro_preco.html", *tmplcadastropreco, &data_cadastropreco)
 	})
-	data_cadastrocliente := data{title, header, host, db, Tabela}
+	data_cadastrocliente := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplcadastrocliente := template.Must(template.ParseFiles("templates/cadastro_cliente.html"))
 	r.HandleFunc("/CadastroCliente", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "cadastro_cliente.html", *tmplcadastrocliente, &data_cadastrocliente)
 	})
-	data_cadastrocobertura := data{title, header, host, db, Tabela}
+	data_cadastrocobertura := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplcadastrocobertura := template.Must(template.ParseFiles("templates/cadastro_cobertura.html"))
 	r.HandleFunc("/CadastroCobertura", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "cadastro_cobertura.html", *tmplcadastrocobertura, &data_cadastrocobertura)
 	})
-	data_cadastrousuario := data{title, header, host, db, Tabela}
+	data_cadastrousuario := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplcadastrousuario := template.Must(template.ParseFiles("templates/cadastro_usuario.html"))
 	r.HandleFunc("/CadastroUsuario", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "cadastro_usuario.html", *tmplcadastrousuario, &data_cadastrousuario)
 	})
-	data_cadastropedido := data{title, header, host, db, Tabela}
+	data_cadastropedido := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplcadastropedido := template.Must(template.ParseFiles("templates/cadastro_pedido.html"))
 	r.HandleFunc("/CadastroPedido", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "cadastro_pedido.html", *tmplcadastropedido, &data_cadastropedido)
 	})
 
 	//Relatorios
-	data_relatorioarea := data{title, header, host, db, Tabela}
+	data_relatorioarea := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplrelatorioarea := template.Must(template.ParseFiles("templates/relatorio_area.html"))
 	r.HandleFunc("/RelatorioArea", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "relatorio_area.html", *tmplrelatorioarea, &data_relatorioarea)
 	})
-	data_relatorioglp := data{title, header, host, db, Tabela}
+	data_relatorioglp := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplrelatorioglp := template.Must(template.ParseFiles("templates/relatorio_glp.html"))
 	r.HandleFunc("/RelatorioGlp", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "relatorio_glp.html", *tmplrelatorioglp, &data_relatorioglp)
 	})
-	data_relatoriopreco := data{title, header, host, db, Tabela}
+	data_relatoriopreco := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplrelatoriopreco := template.Must(template.ParseFiles("templates/relatorio_preco.html"))
 	r.HandleFunc("/RelatorioPreco", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "relatorio_preco.html", *tmplrelatoriopreco, &data_relatoriopreco)
 	})
-	data_relatoriocliente := data{title, header, host, db, Tabela}
+	data_relatoriocliente := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplrelatoriocliente := template.Must(template.ParseFiles("templates/relatorio_cliente.html"))
 	r.HandleFunc("/RelatorioCliente", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "relatorio_cliente.html", *tmplrelatoriocliente, &data_relatoriocliente)
 	})
-	data_relatoriopedido := data{title, header, host, db, Tabela}
+	data_relatoriopedido := data{title, header, host, db, TabelaIds, TabelaDados}
 	tmplrelatoriopedido := template.Must(template.ParseFiles("templates/relatorio_pedido.html"))
 	r.HandleFunc("/RelatorioPedido", func(w http.ResponseWriter, r *http.Request) {
 		genericExecTemplate(w, r, "relatorio_pedido.html", *tmplrelatoriopedido, &data_relatoriopedido)
 	})
-	//data_relatoriocobertura := data{title, header, host, db, Tabela}
+	//data_relatoriocobertura := data{title, header, host, db, TabelaIds, TabelaDados}
 	//tmplrelatoriocobertura := template.Must(template.ParseFiles("templates/relatorio_cobertura.html"))
 	//r.HandleFunc("/RelatorioCobertura", func(w http.ResponseWriter, r *http.Request) {
 	//	genericExecTemplate(w, r, "cadastro_relatorioa.html", *tmplrelatoriocobertura, &data_relatoriocobertura)
 	//})
-	//data_relatoriousuario := data{title, header, host, db, Tabela}
+	//data_relatoriousuario := data{title, header, host, db, TabelaIds, TabelaDados}
 	//tmplrelatoriousuario := template.Must(template.ParseFiles("templates/relatorio_usuario.html"))
 	//r.HandleFunc("/RelatorioUsuario", func(w http.ResponseWriter, r *http.Request) {
 	//	genericExecTemplate(w, r, "cadastro_relatoriohtml", *tmplrelatoriousuario, &data_relatoriousuario)

@@ -40,9 +40,10 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 			log.Fatal(err)
 		}
 		fmt.Println(id, descricao, ts)
-		d.Tabela[row][0] = strconv.Itoa(id)
-		d.Tabela[row][1] = descricao
-		d.Tabela[row][2] = ts
+		d.TabelaIds[row] = strconv.Itoa(id)
+		d.TabelaDados[row][0] = descricao
+		d.TabelaDados[row][1] = descricao
+		d.TabelaDados[row][2] = ts
 		row++
 	}
 	err = rows.Err()
