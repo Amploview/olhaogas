@@ -23,27 +23,50 @@
 		<div id="content">
 
 			<script type="text/javascript">
+				function handleclick() {
+					for (var i = 0; i < document.getElementsByName("descricao").length; i++) {
+						if (document.getElementsByName("name_check_box")[i].checked) {
+							document.getElementsByName("name_check_box")[i].checked = false;
+						}
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("name_radio")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+					}
+				}
 				function handleChangeRadio() {
 					for (var i = 0; i < document.getElementsByName("name_check_box").length; i++) {
 						if (document.getElementsByName("name_check_box")[i].checked) {
 							document.getElementsByName("name_check_box")[i].checked = false;
 						}
 					}
-					//erro pra baixo
-					//for (var i = 0; i < document.getElementsByName("operation").length; i++) {
-						if (document.getElementsByName("operation")[0].value = "Inserir") {
-							document.getElementsByName("name_radio")[0].enable = true;
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
 						}
-						if (document.getElementsByName("operation")[1].value = "Localizar") {
-							document.getElementsByName("name_radio")[1].enable = true;
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
 						}
-						if (document.getElementsByName("operation")[2].value = "Eliminar") {
-							document.getElementsByName("name_radio")[2].enable = false;
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
 						}
-						if (document.getElementsByName("operation")[3].value = "Alterar") {
-							document.getElementsByName("name_radio")[3].enable = true;
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
 						}
-					//}
+					}
 				}
 				function handleChangeCheckBox() {
 					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
@@ -51,21 +74,20 @@
 							document.getElementsByName("name_radio")[i].checked = false;
 						}
 					}
-					//erro pra baixo
-					//for (var i = 0; i < document.getElementsByName("operation").length; i++) {
-						if (document.getElementsByName("operation")[0].value = "Inserir") {
-							document.getElementsByName("name_radio")[0].enable = true;
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
 						}
-						if (document.getElementsByName("operation")[1].value = "Localizar") {
-							document.getElementsByName("name_radio")[1].enable = true;
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
 						}
-						if (document.getElementsByName("operation")[2].value = "Eliminar") {
-							document.getElementsByName("name_radio")[2].enable = true;
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
 						}
-						if (document.getElementsByName("operation")[3].value = "Alterar") {
-							document.getElementsByName("name_radio")[3].enable = false;
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = true;
 						}
-					//}
+					}
 				}
 				function onsubmitform() {
 					if (document.pressed == 'Inserir') {
@@ -122,7 +144,7 @@
 			<div id="content_main">
 				<form name="myform1" onsubmit="return onsubmitform();">
 					<h1>
-						Descricao&nbsp;:&nbsp;<input type="text" name="descricao">
+						Descricao&nbsp;:&nbsp;<input type="text" name="descricao" onClick="handleclick()">
 					</h1>
 					<br>
 						<table border="1" align="left">
@@ -142,13 +164,13 @@
 								<td>
 									<h1>
 										<input type="submit" name="operation"
-											onclick="document.pressed=this.value" value="Eliminar">
+											onclick="document.pressed=this.value" value="Eliminar" disabled>
 									</h1>
 								</td>
 								<td>
 									<h1>
 										<input type="submit" name="operation"
-											onclick="document.pressed=this.value" value="Alterar">
+											onclick="document.pressed=this.value" value="Alterar" disabled>
 									</h1>
 								</td>
 							</tr>
