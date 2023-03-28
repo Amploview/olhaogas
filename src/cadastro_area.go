@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -10,11 +9,13 @@ import (
 
 func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data) {
 	println("cadastro_area")
-	println("Descricao : " + r.Form.Get("descricao"))
-	println("Operacao : " + r.Form.Get("operation"))
-	println("Html : " + html)
-	println("Action :" + strings.Trim(html, ".html"))
-
+	println("Descricao        : " + r.Form.Get("descricao"))
+	println("Id_hidden        : " + r.Form.Get("id_hidden_"+r.Form.Get("name_radio")))
+	println("Descricao_hidden : " + r.Form.Get("descricao_hidden_"+r.Form.Get("name_radio")))
+	println("Ts_hidden        : " + r.Form.Get("ts_hidden_"+r.Form.Get("name_radio")))
+	println("Operacao         : " + r.Form.Get("operation"))
+	println("Html             : " + html)
+	println("Action           : " + strings.Trim(html, ".html"))
 	if r.Form.Get("operation") == "Inserir" {
 
 		_, err := d.db.Exec("insert into area(descricao) values ('" + r.Form.Get("descricao") + "')")
@@ -39,11 +40,11 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(id, descricao, ts)
-		d.TabelaIds[row] = strconv.Itoa(id)
-		d.TabelaDados[row][0] = descricao
-		d.TabelaDados[row][1] = descricao
-		d.TabelaDados[row][2] = ts
+		//fmt.Println(id, descricao, ts)
+		d.TabelaDados[row][0] = strconv.Itoa(id)
+		d.TabelaDados[row][1] = strconv.Itoa(id)
+		d.TabelaDados[row][2] = descricao
+		d.TabelaDados[row][3] = ts
 		row++
 	}
 	err = rows.Err()

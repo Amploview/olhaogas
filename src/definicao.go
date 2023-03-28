@@ -10,6 +10,5 @@ type data struct {
 	Header      string
 	Host        string
 	db          *sql.DB
-	TabelaIds   [sizeRows]string
 	TabelaDados [sizeRows][sizeCols]string
 }
