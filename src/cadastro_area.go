@@ -7,12 +7,23 @@ import (
 	"strings"
 )
 
+func contains(slice []string, item string) bool {
+	set := make(map[string]struct{}, len(slice))
+	for _, s := range slice {
+		set[s] = struct{}{}
+	}
+	_, ok := set[item]
+	return ok
+}
+
 func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data) {
 	println("cadastro_area")
 	println("Descricao        : " + r.Form.Get("descricao"))
-	println("Id_hidden        : " + r.Form.Get("id_hidden_"+r.Form.Get("name_radio")))
-	println("Descricao_hidden : " + r.Form.Get("descricao_hidden_"+r.Form.Get("name_radio")))
-	println("Ts_hidden        : " + r.Form.Get("ts_hidden_"+r.Form.Get("name_radio")))
+	println("************* radio/checkbox ***************")
+	r.ParseForm()
+	checkboxSelected := r.Form["name_checkbox"]
+	radioSelected := r.Form["name_radio"]
+	println("********************************************")
 	println("Operacao         : " + r.Form.Get("operation"))
 	println("Html             : " + html)
 	println("Action           : " + strings.Trim(html, ".html"))
@@ -41,11 +52,20 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 			log.Fatal(err)
 		}
 		//fmt.Println(id, descricao, ts)
-		d.TabelaDados[row][0] = strconv.Itoa(id)
+		d.TabelaDados[row][0] = strconv.Itoa(int(row))
 		d.TabelaDados[row][1] = strconv.Itoa(id)
 		d.TabelaDados[row][2] = descricao
 		d.TabelaDados[row][3] = ts
+		if contains(radioSelected, d.TabelaDados[row][0]) {
+			println(d.TabelaDados[row][0] + " foi selecionado!")
+			//Codificar aqui update ou delete
+		}
+		if contains(checkboxSelected, d.TabelaDados[row][0]) {
+			println(d.TabelaDados[row][0] + " foi selecionado!")
+			//Codificar aqui delete
+		}
 		row++
+		d.Tot_elementos = row
 	}
 	err = rows.Err()
 	if err != nil {
