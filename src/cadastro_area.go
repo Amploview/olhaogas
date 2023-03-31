@@ -27,20 +27,29 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 	println("Operacao         : " + r.Form.Get("operation"))
 	println("Html             : " + html)
 	println("Action           : " + strings.Trim(html, ".html"))
+	for i := 0; i < sizeRows; i++ {
+		for j := 0; j < sizeCols; j++ {
+			d.TabelaDados[i][j] = ""
+		}
+	}
 	if r.Form.Get("operation") == "Inserir" {
-
 		_, err := d.db.Exec("insert into area(descricao) values ('" + r.Form.Get("descricao") + "')")
 		if err != nil {
 			log.Fatal(err)
 		}
-
+		println(r.Form.Get("descricao") + " foi incluida!")
 	}
-
-	rows, err := d.db.Query("select id, descricao, ts from area")
+	var where string
+	where = ""
+	if r.Form.Get("operation") == "Localizar" {
+		if r.Form.Get("descricao") != "" {
+			where = " where descricao like '" + r.Form.Get("descricao") + "%'"
+		}
+	}
+	rows, err := d.db.Query("select id, descricao, ts from area" + where)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer rows.Close()
 	var row int32
 	row = 0
 	for rows.Next() {
@@ -56,14 +65,6 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		d.TabelaDados[row][1] = strconv.Itoa(id)
 		d.TabelaDados[row][2] = descricao
 		d.TabelaDados[row][3] = ts
-		if contains(radioSelected, d.TabelaDados[row][0]) {
-			println(d.TabelaDados[row][0] + " foi selecionado!")
-			//Codificar aqui update ou delete
-		}
-		if contains(checkboxSelected, d.TabelaDados[row][0]) {
-			println(d.TabelaDados[row][0] + " foi selecionado!")
-			//Codificar aqui delete
-		}
 		row++
 		d.Tot_elementos = row
 	}
@@ -71,4 +72,40 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
+	for row := 0; int(row) < int(d.Tot_elementos); row++ {
+		var id string
+		var descricao string
+		id = d.TabelaDados[row][1]
+		descricao = d.TabelaDados[row][2]
+		if contains(radioSelected, d.TabelaDados[row][0]) {
+			println(d.TabelaDados[row][0] + " foi selecionado!")
+			if r.Form.Get("operation") == "Alterar" {
+				_, err := d.db.Exec("update area set descricao = '" + descricao +
+					"' ,ts = CURRENT_TIMESTAMP where id = " + id)
+				if err != nil {
+					log.Fatal(err)
+				}
+				println(d.TabelaDados[row][0] + " foi alterado!")
+			} else if r.Form.Get("operation") == "Eliminar" {
+				_, err := d.db.Exec("delete from area where id = " + id)
+				if err != nil {
+					log.Fatal(err)
+				}
+				println("delete from area where id = " + id)
+				println(d.TabelaDados[row][0] + " foi eliminado!")
+			}
+		}
+		if contains(checkboxSelected, d.TabelaDados[row][0]) {
+			if r.Form.Get("operation") == "Eliminar" {
+				println(d.TabelaDados[row][0] + " foi selecionado!")
+				_, err := d.db.Exec("delete from area where id = " + id)
+				if err != nil {
+					log.Fatal(err)
+				}
+				println(d.TabelaDados[row][0] + " foi eliminado!")
+			}
+		}
+	}
+	defer rows.Close()
 }
