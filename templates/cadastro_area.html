@@ -6,7 +6,7 @@
 <title>{{ .Title }}</title>
 </head>
 
-<body>
+<body onload="onloadform()">
 	<div id="container">
 		<div id="header">
 			<h1>{{ .Header }}</h1>
@@ -23,7 +23,19 @@
 		<div id="content">
 
 			<script type="text/javascript">
-				function handleclick() {
+				function onloadform()
+				{
+					if (document.pressed == "Inserir") {
+						document.myform1.action = "{{ .Host }}/CadastroArea?operation=Reflesh"
+						document.forms["myform1"].submit();
+					} else {
+						if (document.getElementsByName("operation").value == "Reflesh") {
+							document.pressed = "Localizar";
+							document.getElementsByName("operation").value = document.pressed;
+						}
+					}
+				}
+				function handleclickDescricao() {
 					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
 						if (document.getElementsByName("name_checkbox")[i].checked) {
 							document.getElementsByName("name_checkbox")[i].checked = false;
@@ -119,7 +131,7 @@
 							alert('Nenhum registro selecionado para ser eliminado!');
 							return false;
 						} else {
-							document.myform2.action = "{{ .Host }}/CadastroArea";
+							document.myform1.action = "{{ .Host }}/CadastroArea";
 						}
 					} else if (document.pressed == 'Alterar') {
 						if (document.getElementsByName("descricao")[0].value == null
@@ -139,7 +151,7 @@
 							} else {
 								//document.getElementsByName("descricao_myform1")[0].value = document
 								//		.getElementsByName("descricao")[0].value;
-								document.myform2.action = "{{ .Host }}/CadastroArea";
+								document.myform1.action = "{{ .Host }}/CadastroArea";
 							}
 						}
 					}
@@ -149,9 +161,10 @@
 
 			<div id="content_top"></div>
 			<div id="content_main">
-				<form name="myform1" onsubmit="return onsubmitform();">
+				<!--<form name="myform1" onsubmit="return onsubmitform();">-->
+				<form name="myform1" onsubmit="onsubmitform()">
 					<h1>
-						Descricao&nbsp;:&nbsp;<input type="text" name="descricao" onClick="handleclick()">
+						Descricao&nbsp;:&nbsp;<input type="text" name="descricao" onClick="handleclickDescricao()">
 					</h1>
 					<br>
 						<table border="1" align="left">

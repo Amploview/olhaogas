@@ -47,13 +47,15 @@ func genericExecTemplate(w http.ResponseWriter, r *http.Request, html string, tm
 	//println("Operacao : " + r.Form.Get("operation"))
 	//println("Html : " + html)
 	//println("Action :" + strings.Trim(html, ".html"))
-	if r.Form.Get("operation") == "" {
-		for i := 0; i < sizeRows; i++ {
-			for j := 0; j < sizeCols; j++ {
-				d.TabelaDados[i][j] = ""
+	/*
+		if r.Form.Get("operation") == "" {
+			for i := 0; i < sizeRows; i++ {
+				for j := 0; j < sizeCols; j++ {
+					d.TabelaDados[i][j] = ""
+				}
 			}
 		}
-	}
+	*/
 	switch strings.Trim(html, ".html") {
 	case "olhaogas":
 		println("é olhaogas")

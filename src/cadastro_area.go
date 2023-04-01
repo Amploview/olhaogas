@@ -77,7 +77,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		var id string
 		var descricao string
 		id = d.TabelaDados[row][1]
-		descricao = d.TabelaDados[row][2]
+		descricao = r.Form.Get("descricao")
 		if contains(radioSelected, d.TabelaDados[row][0]) {
 			println(d.TabelaDados[row][0] + " foi selecionado!")
 			if r.Form.Get("operation") == "Alterar" {
