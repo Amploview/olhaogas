@@ -12,4 +12,5 @@ type data struct {
 	db            *sql.DB
 	TabelaDados   [sizeRows][sizeCols]string
 	Tot_elementos int32
+	Reload        int
 }

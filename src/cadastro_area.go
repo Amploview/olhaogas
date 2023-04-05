@@ -46,7 +46,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 			where = " where descricao like '" + r.Form.Get("descricao") + "%'"
 		}
 	}
-	rows, err := d.db.Query("select id, descricao, ts from area" + where)
+	rows, err := d.db.Query("select * from (select row_number() over (order by id) rownum, id, descricao, ts from area order by id) " + where)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,12 +56,13 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		var id int
 		var descricao string
 		var ts string
-		err = rows.Scan(&id, &descricao, &ts)
+		var rownum int
+		err = rows.Scan(&rownum, &id, &descricao, &ts)
 		if err != nil {
 			log.Fatal(err)
 		}
 		//fmt.Println(id, descricao, ts)
-		d.TabelaDados[row][0] = strconv.Itoa(int(row))
+		d.TabelaDados[row][0] = strconv.Itoa(rownum - 1)
 		d.TabelaDados[row][1] = strconv.Itoa(id)
 		d.TabelaDados[row][2] = descricao
 		d.TabelaDados[row][3] = ts
@@ -106,6 +107,18 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 				println(d.TabelaDados[row][0] + " foi eliminado!")
 			}
 		}
+	}
+	if r.Form.Get("operation") == "Inserir" {
+		d.Reload++
+	} else if r.Form.Get("operation") == "Alterar" {
+		d.Reload++
+	} else if r.Form.Get("operation") == "Eliminar" {
+		d.Reload++
+	} else {
+		d.Reload = -1
+	}
+	if d.Reload > 0 {
+		d.Reload = -1
 	}
 	defer rows.Close()
 }
