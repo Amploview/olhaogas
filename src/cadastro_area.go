@@ -52,20 +52,19 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		if err != nil {
 			println(err)
 		}
-		//fmt.Println(id, descricao, ts)
 		d.TabelaDados[row][0] = strconv.Itoa(rownum - 1)
 		d.TabelaDados[row][1] = strconv.Itoa(id)
 		d.TabelaDados[row][2] = descricao
 		d.TabelaDados[row][3] = ts
 		row++
-		d.Tot_elementos = row
 	}
 	err = rows.Err()
 	if err != nil {
 		println(err)
 	}
 	defer rows.Close()
-	for row := 0; int(row) < int(d.Tot_elementos); row++ {
+	var Tot_elementos = row
+	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string
 		var descricao string
 		id = d.TabelaDados[row][1]

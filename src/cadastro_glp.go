@@ -41,13 +41,14 @@ func cadastro_glp(w http.ResponseWriter, r *http.Request, html string, d *data) 
 	where = ""
 	if r.Form.Get("operation") == "Localizar" {
 		if r.Form.Get("descricao") != "" || r.Form.Get("glp_default") != "" {
-			where = " where "
 			if r.Form.Get("descricao") != "" {
 				where = " where descricao like '" + r.Form.Get("descricao") + "%'"
 			}
 			if r.Form.Get("glp_default") != "" {
-				if where != " where " {
+				if where != "" {
 					where = " and "
+				} else {
+					where = " where "
 				}
 				where = "glp_default = " + r.Form.Get("glp_default")
 			}
@@ -71,7 +72,6 @@ func cadastro_glp(w http.ResponseWriter, r *http.Request, html string, d *data) 
 		if err != nil {
 			println(err)
 		}
-		//fmt.Println(id, descricao, ts)
 		d.TabelaDados[row][0] = strconv.Itoa(rownum - 1)
 		d.TabelaDados[row][1] = strconv.Itoa(id)
 		d.TabelaDados[row][2] = descricao
@@ -82,15 +82,14 @@ func cadastro_glp(w http.ResponseWriter, r *http.Request, html string, d *data) 
 		}
 		d.TabelaDados[row][4] = ts
 		row++
-		d.Tot_elementos = row
 	}
 	err = rows.Err()
 	if err != nil {
 		println(err)
 	}
 	defer rows.Close()
-
-	for row := 0; int(row) < int(d.Tot_elementos); row++ {
+	var Tot_elementos = row
+	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string
 		var descricao string
 		var glp_default string
