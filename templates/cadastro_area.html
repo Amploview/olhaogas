@@ -21,7 +21,7 @@
 			</ul>
 		</div>
 		<div id="content">
-			 <script type="text/javascript">
+			<script type="text/javascript">
 				document.addEventListener('readystatechange', event => {
   					switch (document.readyState) {
     					case "loading":
@@ -30,8 +30,13 @@
       						break;
     					case "complete":
 							if (document.getElementsByName("reload")[0].value == 0) {
-								alert("Acione Localizar e visualize!");
-								//history.go(0);
+								document.pressed = "Localizar";
+								for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+									if (document.getElementsByName("operation")[i].value == "Localizar") {
+										document.getElementsByName("operation")[i].enable = true;
+										document.getElementsByName("operation")[i].click();
+									}
+								}
 							}
       						break;
   						}
@@ -158,8 +163,6 @@
 								alert('Registro não selecionado para ser alterado!');
 								return false;
 							} else {
-								//document.getElementsByName("descricao_myform1")[0].value = document
-								//		.getElementsByName("descricao")[0].value;
 								if (confirm("Confirma Alteração!") == true) {
 									document.myform1.action = "{{ .Host }}/CadastroArea";
 								} else {
@@ -208,7 +211,6 @@
 							</tr>
 						</table> <br><br><br>
 			</div>
-				<!-- <input type="hidden" name="descricao_myform1" value=""> -->
 			<div id="Colunas">
 				  	<h1>
 				 	<table>
@@ -218,15 +220,16 @@
 							{{range $key2, $value2 := .}}
 							 	{{if $key2}}
 								 	{{if $value2}}
-										{{if eq $key2 1}}
+										<!-- {{if eq $key2 1}}
 											<td>{{$value2}}</td>
-										{{end}}
+										{{end}} disabled show id-->
 										{{if eq $key2 2}}
 										<input type="hidden" name="descricao_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
 										{{if eq $key2 3}}
-											<td>{{$value2}}</td></tr>
+											<!-- <td>{{$value2}}</td> disable show ts -->
+											</tr>
 										{{end}}
 									{{end}}
 								{{else}}

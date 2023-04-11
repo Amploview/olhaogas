@@ -75,6 +75,10 @@ func genericExecTemplate(w http.ResponseWriter, r *http.Request, html string, tm
 		}
 	case "cadastro_glp":
 		cadastro_glp(w, r, html, d)
+		fmt.Fprintf(w, "<input type=\"hidden\" name=\"reload\" value="+strconv.Itoa(d.Reload)+">")
+		if d.Reload != 0 {
+			d.Reload = -1
+		}
 	case "cadastro_preco":
 		cadastro_preco(w, r, html, d)
 	case "cadastro_cliente":

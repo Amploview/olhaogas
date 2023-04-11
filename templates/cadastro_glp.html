@@ -20,60 +20,192 @@
 				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
 			</ul>
 		</div>
-
 		<div id="content">
-
 			<script type="text/javascript">
-				function onsubmitform() {
-				    var selecionado;
-					if (document.pressed == 'Inserir') {
-						if ((document.getElementsByName("descricao")[0].value == null || 
-								document.getElementsByName("descricao")[0].value == "")) {
-							alert('Descricao não preenchido!');
-							return false;
+				document.addEventListener('readystatechange', event => {
+  					switch (document.readyState) {
+    					case "loading":
+      						break;
+    					case "interactive":
+      						break;
+    					case "complete":
+							if (document.getElementsByName("reload")[0].value == 0) {
+								document.pressed = "Localizar";
+								for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+									if (document.getElementsByName("operation")[i].value == "Localizar") {
+										document.getElementsByName("operation")[i].enable = true;
+										document.getElementsByName("operation")[i].click();
+									}
+								}
+							}
+      						break;
+  						}
+				});
+				function handleclickDescricao() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
 						}
-						selecionado = false;
-						for (var i = 0; i < document.getElementsByName("glp_default").length; i++) {
-							if (document.getElementsByName("glp_default")[i].checked) {
-								selecionado = true;
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+				}
+				function handleChangeRadio() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("descricao")[0].value = document.getElementsByName("descricao_hidden")[i].value;
+							document.getElementsByName("glp_default")[0].checked = false;
+							document.getElementsByName("glp_default")[1].checked = true;
+							if (document.getElementsByName("glp_default_hidden")[i].value == "1") {
+								document.getElementsByName("glp_default")[0].checked = true;
+								document.getElementsByName("glp_default")[1].checked = false;
 							}
 						}
-						if (!selecionado) {
-								alert('Default não preenchido!');
-								return false;
+					}
+				}
+				function handleChangeCheckBox() {
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("name_radio")[i].checked = false;
 						}
-						document.myform1.action = "{{ .Host }}/CadastroGlp";
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+					}
+					document.getElementsByName("descricao")[0].value = "";
+					document.getElementsByName("glp_default")[0].checked = false;
+					document.getElementsByName("glp_default")[1].checked = false;
+				}
+				function onsubmitform() {
+					if (document.pressed == 'Inserir') {
+						var glp_default_definido = false
+						for (var i = 0; i < document.getElementsByName("glp_default").length; i++) 
+						{
+							if (document.getElementsByName("glp_default")[i].checked) {
+								if (document.getElementsByName("glp_default")[i].value == "0") {
+									glp_default_definido = true;
+								} else if (document.getElementsByName("glp_default")[i].value == "1") {
+									glp_default_definido = true;
+								}
+							}
+						}
+						if (!glp_default_definido) {
+							alert('Defalut precisa ser informado!');
+							return false;
+						}
+						if (document.getElementsByName("descricao")[0].value == null
+								|| document.getElementsByName("descricao")[0].value == "") {
+							alert('Descricao não preenchida!');
+							return false;
+						} else {
+							if (confirm("Confirma Inserção!") == true) {
+								document.myform1.action = "{{ .Host }}/CadastroGlp";
+							} else {
+								return false;
+							}
+						}
 					} else if (document.pressed == 'Localizar') {
 						document.myform1.action = "{{ .Host }}/CadastroGlp";
 					} else if (document.pressed == 'Eliminar') {
 						var selecionado = false;
-						for (var i = 0; i < document.getElementsByName("id").length; i++) {
-							if (document.getElementsByName("id")[i].checked) {
-								selecionado = true;
+						for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) 
+						{
+							if (document.getElementsByName("name_checkbox")[i].checked) {
+								if (document.getElementsByName("glp_default_hidden")[i].value == "1") {
+									alert(document.getElementsByName("descricao_hidden")[i].value + ' nao pode ser eliminado enquanto é GLP Default!');
+									return false;
+								} else {
+									selecionado = true;
+								}
+							}
+						}
+						for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+							if (document.getElementsByName("name_radio")[i].checked && !selecionado) {
+								if (document.getElementsByName("glp_default_hidden")[i].value == "1") {
+									alert(document.getElementsByName("descricao_hidden")[i].value + ' nao pode ser eliminado enquanto é GLP Default!');
+									return false;
+								} else {
+									selecionado = true;
+								}
 							}
 						}
 						if (!selecionado) {
-							alert('Registro não selecionado para ser eliminado!');
+							alert('Nenhum registro selecionado para ser eliminado!');
 							return false;
 						} else {
-							document.myform2.action = "{{ .Host }}/CadastroGlp";
-						}
-					} else if (document.pressed == 'Alterar') {
-						selecionado = false;
-						for (var i = 0; i < document.getElementsByName("glp_default").length; i++) {
-							if (document.getElementsByName("glp_default")[i].checked) {
-								selecionado = true;
+							if (confirm("Confirma Exclusão!") == true) {
+								document.myform1.action = "{{ .Host }}/CadastroGlp";
+							} else {
+								return false;
 							}
 						}
-						if ((!selecionado) && (document.getElementsByName("descricao")[0].value == null ||
-								document.getElementsByName("descricao")[0].value == "")) {
-							alert('Descricao e ou Default não preenchidos!');
+					} else if (document.pressed == 'Alterar') {
+						var glp_default_definido = false
+						for (var i = 0; i < document.getElementsByName("glp_default").length; i++) 
+						{
+							if (document.getElementsByName("glp_default")[i].checked) {
+								if (document.getElementsByName("glp_default")[i].value == "0") {
+									glp_default_definido = true
+								} else if (document.getElementsByName("glp_default")[i].value == "1") {
+									glp_default_definido = true
+								}
+							}
+						}
+						if (!glp_default_definido) {
+							alert('Defalut precisa ser informado!');
+							return false;
+						}
+						if (document.getElementsByName("descricao")[0].value == null
+								|| document.getElementsByName("descricao")[0].value == "") {
+							alert('Descricao não preenchida!');
 							return false;
 						} else {
 							var selecionado = false;
-							for (var i = 0; i < document
-									.getElementsByName("id").length; i++) {
-								if (document.getElementsByName("id")[i].checked) {
+							for (var i = 0; i < document.getElementsByName("name_radio").length; i++) 
+							{
+								if (document.getElementsByName("name_radio")[i].checked) {
 									selecionado = true;
 								}
 							}
@@ -81,29 +213,11 @@
 								alert('Registro não selecionado para ser alterado!');
 								return false;
 							} else {
-								if (!((document.getElementsByName("descricao")[0].value == null || 
-										document.getElementsByName("descricao")[0].value == ""))) {
-									document.getElementsByName("descricao_myform1")[0].value = 
-										document.getElementsByName("descricao")[0].value;
+								if (confirm("Confirma Alteração!") == true) {
+									document.myform1.action = "{{ .Host }}/CadastroGlp";
+								} else {
+									return false;
 								}
-								for (var i = 0; i < document
-										.getElementsByName("glp_default").length; i++) {
-									if (document
-											.getElementsByName("glp_default")[i].checked) {
-										if (document
-												.getElementsByName("glp_default")[i].value == "0") {
-											document
-													.getElementsByName("glp_default_myform1")[0].value = document
-													.getElementsByName("glp_default_0")[0].value;
-										} else if (document
-												.getElementsByName("glp_default")[i].value == "1") {
-											document
-													.getElementsByName("glp_default_myform1")[0].value = document
-													.getElementsByName("glp_default_1")[0].value;
-										}
-									}
-								}
-								document.myform2.action = "{{ .Host }}/CadastroGlp";
 							}
 						}
 					}
@@ -115,7 +229,7 @@
 			<div id="content_main">
 				<form name="myform1" onsubmit="return onsubmitform();">
 					<h1>
-						Descricao&nbsp;:&nbsp;<input type="text" name="descricao">
+						Descricao&nbsp;:&nbsp;<input type="text" name="descricao" onClick="handleclickDescricao()">
 					</h1>
 					<h1>
 						Default&nbsp;:&nbsp;<input type="radio" name="glp_default"
@@ -137,24 +251,65 @@
 											onclick="document.pressed=this.value" value="Localizar">
 									</h1>
 								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Eliminar" disabled>
+									</h1>
+								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Alterar" disabled>
+									</h1>
+								</td>
 							</tr>
 						</table> <br><br><br>
-				</form>
 			</div>
 			<div id="Colunas">
-				<h1>
-			   	<table>
-			  		{{range .TabelaDados}}
-				  		<tr>
-				  		{{range .}}
-					  		<td>{{.}}</td>
-				  		{{end}}
-				  		</tr>
-			  		{{end}}
-			  </table>
-			  </h1>
-	  		</div>
-	  <div id="content_bottom"></div>
+				  	<h1>
+				 	<table>
+					{{range $key1, $value1 := .TabelaDados }}
+						{{if $value1}}
+							<!--<tr>-->
+							{{range $key2, $value2 := .}}
+							 	{{if $key2}}
+								 	{{if $value2}}
+										<!-- {{if eq $key2 1}}
+											<td>{{$value2}}</td>
+										{{end}} disabled show id-->
+										{{if eq $key2 2}}
+										<input type="hidden" name="descricao_hidden" value="{{$value2}}"> 
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 3}}
+											<input type="hidden" name="glp_default_hidden" value="{{$value2}}"> 
+											<td>
+											{{if eq $value2 "1"}}
+												--->Default<---
+											{{end}}
+											</td>
+										{{end}}
+										{{if eq $key2 4}}
+											<!-- <td>{{$value2}}</td> disable show ts --> 
+											</tr>
+										{{end}}
+									{{end}}
+								{{else}}
+								 	{{if $value2}}
+										<tr><td><input type="radio" id="id_radio" name="name_radio" value="{{$value2}}" onchange="handleChangeRadio();"></td>
+										<td><input type="checkbox" id="id_checkbox" name="name_checkbox" value="{{$value2}}" onchange="handleChangeCheckBox();"></td>
+									{{end}}
+								{{end}}
+							{{end}}
+						 	<!--</tr>-->
+						 {{end}}
+					{{end}}
+				</table>
+					</h1>
+			</div>
+				</form>
+			<div id="content_bottom"></div>
 		</div>
 	</div>
 </body>

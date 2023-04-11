@@ -1,31 +1,18 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-func contains(slice []string, item string) bool {
-	set := make(map[string]struct{}, len(slice))
-	for _, s := range slice {
-		set[s] = struct{}{}
-	}
-	_, ok := set[item]
-	return ok
-}
-
 func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data) {
 	println("cadastro_area")
-	println("Descricao        : " + r.Form.Get("descricao"))
-	println("************* radio/checkbox ***************")
+	var cmd string
 	r.ParseForm()
 	checkboxSelected := r.Form["name_checkbox"]
 	radioSelected := r.Form["name_radio"]
-	println("********************************************")
 	println("Operacao         : " + r.Form.Get("operation"))
-	println("Html             : " + html)
 	println("Action           : " + strings.Trim(html, ".html"))
 	for i := 0; i < sizeRows; i++ {
 		for j := 0; j < sizeCols; j++ {
@@ -33,11 +20,13 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		}
 	}
 	if r.Form.Get("operation") == "Inserir" {
-		_, err := d.db.Exec("insert into area(descricao) values ('" + r.Form.Get("descricao") + "')")
+		cmd = "insert into area(descricao) values ('" + r.Form.Get("descricao") + "')"
+		_, err := d.db.Exec(cmd)
+		println(cmd)
 		if err != nil {
-			log.Fatal(err)
+			println(err)
 		}
-		println(r.Form.Get("descricao") + " foi incluida!")
+		println(r.Form.Get("descricao") + " foi incluido!")
 	}
 	var where string
 	where = ""
@@ -46,9 +35,11 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 			where = " where descricao like '" + r.Form.Get("descricao") + "%'"
 		}
 	}
-	rows, err := d.db.Query("select * from (select row_number() over (order by id) rownum, id, descricao, ts from area order by id) " + where)
+	cmd = "select * from (select row_number() over (order by id) rownum, id, descricao, ts from area order by id) " + where
+	rows, err := d.db.Query(cmd)
+	println(cmd)
 	if err != nil {
-		log.Fatal(err)
+		println(err)
 	}
 	var row int32
 	row = 0
@@ -59,7 +50,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		var rownum int
 		err = rows.Scan(&rownum, &id, &descricao, &ts)
 		if err != nil {
-			log.Fatal(err)
+			println(err)
 		}
 		//fmt.Println(id, descricao, ts)
 		d.TabelaDados[row][0] = strconv.Itoa(rownum - 1)
@@ -71,7 +62,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		println(err)
 	}
 	defer rows.Close()
 	for row := 0; int(row) < int(d.Tot_elementos); row++ {
@@ -80,31 +71,45 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		id = d.TabelaDados[row][1]
 		descricao = r.Form.Get("descricao")
 		if contains(radioSelected, d.TabelaDados[row][0]) {
-			println(d.TabelaDados[row][0] + " foi selecionado!")
 			if r.Form.Get("operation") == "Alterar" {
-				_, err := d.db.Exec("update area set descricao = '" + descricao +
-					"' ,ts = CURRENT_TIMESTAMP where id = " + id)
+				println(d.TabelaDados[row][1] + " foi selecionado!")
+				cmd = "update area set descricao = '" + descricao + "' ,ts = CURRENT_TIMESTAMP where id = " + id
+				_, err := d.db.Exec(cmd)
+				println(cmd)
 				if err != nil {
-					log.Fatal(err)
+					println(err)
 				}
-				println(d.TabelaDados[row][0] + " foi alterado!")
+				println(d.TabelaDados[row][1] + " foi alterado de " + d.TabelaDados[row][2] + " para " + descricao + "!")
+				d.TabelaDados[row][2] = descricao
 			} else if r.Form.Get("operation") == "Eliminar" {
-				_, err := d.db.Exec("delete from area where id = " + id)
+				println(d.TabelaDados[row][1] + " foi selecionado!")
+				cmd = "delete from area where id = " + id
+				_, err := d.db.Exec(cmd)
+				println(cmd)
 				if err != nil {
-					log.Fatal(err)
+					println(err)
 				}
-				println("delete from area where id = " + id)
-				println(d.TabelaDados[row][0] + " foi eliminado!")
+				println(d.TabelaDados[row][1] + " foi eliminado!")
+				d.TabelaDados[row][0] = ""
+				d.TabelaDados[row][1] = ""
+				d.TabelaDados[row][2] = ""
+				d.TabelaDados[row][3] = ""
 			}
 		}
 		if contains(checkboxSelected, d.TabelaDados[row][0]) {
 			if r.Form.Get("operation") == "Eliminar" {
-				println(d.TabelaDados[row][0] + " foi selecionado!")
-				_, err := d.db.Exec("delete from area where id = " + id)
+				println(d.TabelaDados[row][1] + " foi selecionado!")
+				cmd = "delete from area where id = " + id
+				_, err := d.db.Exec(cmd)
+				println(cmd)
 				if err != nil {
-					log.Fatal(err)
+					println(err)
 				}
-				println(d.TabelaDados[row][0] + " foi eliminado!")
+				println(d.TabelaDados[row][1] + " foi eliminado!")
+				d.TabelaDados[row][0] = ""
+				d.TabelaDados[row][1] = ""
+				d.TabelaDados[row][2] = ""
+				d.TabelaDados[row][3] = ""
 			}
 		}
 	}
@@ -115,7 +120,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 	} else if r.Form.Get("operation") == "Eliminar" {
 		d.Reload++
 	} else {
-		d.Reload = -1
+		d.Reload++
 	}
 	if d.Reload > 0 {
 		d.Reload = -1
