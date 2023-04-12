@@ -42,15 +42,15 @@ func cadastro_glp(w http.ResponseWriter, r *http.Request, html string, d *data) 
 	if r.Form.Get("operation") == "Localizar" {
 		if r.Form.Get("descricao") != "" || r.Form.Get("glp_default") != "" {
 			if r.Form.Get("descricao") != "" {
-				where = " where descricao like '" + r.Form.Get("descricao") + "%'"
+				where += " where descricao like '" + r.Form.Get("descricao") + "%'"
 			}
 			if r.Form.Get("glp_default") != "" {
 				if where != "" {
-					where = " and "
+					where += " and "
 				} else {
-					where = " where "
+					where += " where "
 				}
-				where = "glp_default = " + r.Form.Get("glp_default")
+				where += "glp_default = " + r.Form.Get("glp_default")
 			}
 		}
 	}

@@ -86,7 +86,7 @@ func cadastro_preco(w http.ResponseWriter, r *http.Request, html string, d *data
 	}
 	defer rows.Close()
 	if r.Form.Get("operation") == "Inserir" {
-		cmd = "insert into glp_preco_area(preco, id_glp, id_area) values ('" + r.Form.Get("preco") + ", " + r.Form.Get("id_glp") + ", " + r.Form.Get("id_area") + "')"
+		cmd = "insert into glp_preco_area(preco, id_glp, id_area) values (" + r.Form.Get("preco") + ", " + r.Form.Get("id_glp") + ", " + r.Form.Get("id_area") + ")"
 		_, err := d.db.Exec(cmd)
 		println(cmd)
 		if err != nil {
@@ -98,23 +98,23 @@ func cadastro_preco(w http.ResponseWriter, r *http.Request, html string, d *data
 	where = ""
 	if r.Form.Get("operation") == "Localizar" {
 		if r.Form.Get("preco") != "" {
-			where = " where preco = '" + r.Form.Get("preco")
+			where += " where preco = " + r.Form.Get("preco")
 		}
 		if r.Form.Get("id_glp") != "" {
 			if where != "" {
-				where = " and "
+				where += " and "
 			} else {
-				where = " where "
+				where += " where "
 			}
-			where = "id_glp = " + r.Form.Get("id_glp")
+			where += "id_glp = " + r.Form.Get("id_glp")
 		}
 		if r.Form.Get("id_area") != "" {
 			if where != "" {
-				where = " and "
+				where += " and "
 			} else {
-				where = " where "
+				where += " where "
 			}
-			where = "id_area = " + r.Form.Get("id_area")
+			where += "id_area = " + r.Form.Get("id_area")
 		}
 	}
 	cmd = "select * from (select row_number() over (order by glp_preco_area.id) rownum, glp_preco_area.id as id, preco, id_glp, glp.descricao as descricao_glp, id_area, area.descricao as descricao_area, glp_preco_area.ts as ts from glp_preco_area, glp, area where glp_preco_area.id_glp = glp.id and glp_preco_area.id_area = area.id order by glp_preco_area.id) " + where

@@ -20,146 +20,142 @@
 				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
 			</ul>
 		</div>
-
 		<div id="content">
-
 			<script type="text/javascript">
+				document.addEventListener('readystatechange', event => {
+  					switch (document.readyState) {
+    					case "loading":
+      						break;
+    					case "interactive":
+      						break;
+    					case "complete":
+							if (document.getElementsByName("reload")[0].value == 0) {
+								document.pressed = "Localizar";
+								for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+									if (document.getElementsByName("operation")[i].value == "Localizar") {
+										document.getElementsByName("operation")[i].enable = true;
+										document.getElementsByName("operation")[i].click();
+									}
+								}
+							}
+      						break;
+  						}
+				});
+				function handleclickDescricao() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+				}
+				function handleChangeRadio() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("descricao")[0].value = document.getElementsByName("descricao_hidden")[i].value;
+						}
+					}
+				}
+				function handleChangeCheckBox() {
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("name_radio")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+					}
+					document.getElementsByName("descricao")[0].value = "";
+				}
 				function onsubmitform() {
-				        var selecionado;
 					if (document.pressed == 'Inserir') {
-						if (document.getElementsByName("nome")[0].value == null
-								|| document.getElementsByName("nome")[0].value == "") {
-							alert('Nome não preenchido!');
+						if (document.getElementsByName("descricao")[0].value == null
+								|| document.getElementsByName("descricao")[0].value == "") {
+							alert('Descricao não preenchida!');
 							return false;
+						} else {
+							if (confirm("Confirma Inserção!") == true) {
+								document.myform1.action = "{{ .Host }}/CadastroCliente";
+							} else {
+								return false;
+							}
 						}
-						if (document.getElementsByName("endereco")[0].value == null
-								|| document.getElementsByName("endereco")[0].value == "") {
-							alert('Endereco não preenchido!');
-							return false;
-						}
-						if (document.getElementsByName("area")[0].value == null
-								|| document.getElementsByName("area")[0].value == "") {
-							alert('Area não preenchida!');
-							return false;
-						}
-						if (document.getElementsByName("ddi_whatsap")[0].value == null
-								|| document.getElementsByName("ddi_whatsap")[0].value == "") {
-							alert('DDI não preenchido!');
-							return false;
-						}
-						if (document.getElementsByName("ddd_whatsap")[0].value == null
-								|| document.getElementsByName("ddd_whatsap")[0].value == "") {
-							alert('DDD não preenchido!');
-							return false;
-						}
-						//if (document.getElementsByName("celular_whatsap")[0].value == null
-						//		|| document.getElementsByName("celular_whatsap")[0].value == "") {
-						//	alert('Celular não preenchido!');
-						//	return false;
-						//}
-						if (document.getElementsByName("cep")[0].value == null
-								|| document.getElementsByName("cep")[0].value == "") {
-							
-							//alert('CEP não preenchido!');
-							//return false;
-							document.getElementsByName("cep")[0].value = '99999';
-						}
-						if (document.getElementsByName("referencia")[0].value == null
-								|| document.getElementsByName("referencia")[0].value == "") {
-							//alert('Referencia não preenchida!');
-							//return false;
-							document.getElementsByName("referencia")[0].value = 'S/Ref.';
-						}
-						if (document.getElementsByName("email")[0].value == null
-								|| document.getElementsByName("email")[0].value == "") {
-							//alert('Email não preenchido!');
-							//return false;
-							document.getElementsByName("email")[0].value = 'xxx@gmail.com';
-						}
-						document.myform1.action = "{{ .Host }}/CadastroCliente";
 					} else if (document.pressed == 'Localizar') {
 						document.myform1.action = "{{ .Host }}/CadastroCliente";
-					} else if (document.pressed == 'Recuperar') {
-						document.getElementsByName("nome")[0].value = "<%out.print(request.getParameter("nome"));%>";
-						document.getElementsByName("endereco")[0].value = "<%out.print(request.getParameter("endereco"));%>";
-						document.getElementsByName("area")[0].value = "<%out.print(request.getParameter("area"));%>";
-						document.getElementsByName("ddd_whatsap")[0].value = "<%out.print(request.getParameter("ddd_whatsap"));%>";
-						document.getElementsByName("cep")[0].value = "<%out.print(request.getParameter("cep"));%>";
-						document.getElementsByName("referencia")[0].value = "<%out.print(request.getParameter("referencia"));%>";
-						document.getElementsByName("email")[0].value = "<%out.print(request.getParameter("email"));%>";
-						return false;
-					} else if (document.pressed == 'Pedido') {
-						var selecionado = false;
-						for (var i = 0; i < document.getElementsByName("id").length; i++) {
-							if (document.getElementsByName("id")[i].checked) {
-								selecionado = true;
-							}
-						}
-						if (!selecionado) {
-							alert('Registro não selecionado para ser efetuado o pedido!');
-							return false;
-						} else {
-							document.myform2.action = "{{ .Host }}/CadastroPedido";
-						}
 					} else if (document.pressed == 'Eliminar') {
 						var selecionado = false;
-						for (var i = 0; i < document.getElementsByName("id").length; i++) {
-							if (document.getElementsByName("id")[i].checked) {
+						for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+							if (document.getElementsByName("name_checkbox")[i].checked) {
+								selecionado = true;
+							}
+						}
+						for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+							if (document.getElementsByName("name_radio")[i].checked) {
 								selecionado = true;
 							}
 						}
 						if (!selecionado) {
-							alert('Registro não selecionado para ser eliminado!');
+							alert('Nenhum registro selecionado para ser eliminado!');
 							return false;
 						} else {
-							document.myform2.action = "{{ .Host }}/CadastroCliente";
+							if (confirm("Confirma Exclusão!") == true) {
+								document.myform1.action = "{{ .Host }}/CadastroCliente";
+							} else {
+								return false;
+							}
 						}
 					} else if (document.pressed == 'Alterar') {
-						var dados_nao_informados = true;
-						if (document.getElementsByName("nome")[0].value != null
-								&& document.getElementsByName("nome")[0].value != "") {
-							dados_nao_informados = false;
-						}
-						if (document.getElementsByName("endereco")[0].value != null
-								&& document.getElementsByName("endereco")[0].value != "") {
-							dados_nao_informados = false;
-						}
-						if (document.getElementsByName("area")[0].value == null
-								|| document.getElementsByName("area")[0].value == "") {
-							dados_nao_informados = false;
-						}
-						if (document.getElementsByName("ddi_whatsap")[0].value != null
-								&& document.getElementsByName("ddi_whatsap")[0].value != "") {
-							dados_nao_informados = false;
-						}
-						if (document.getElementsByName("ddd_whatsap")[0].value != null
-								&& document.getElementsByName("ddd_whatsap")[0].value != "") {
-							dados_nao_informados = false;
-						}
-						//if (document.getElementsByName("celular_whatsap")[0].value != null
-						//		&& document.getElementsByName("celular_whatsap")[0].value != "") {
-						//	dados_nao_informados = false;
-						//}
-						if (document.getElementsByName("cep")[0].value != null
-								&& document.getElementsByName("cep")[0].value != "") {
-							dados_nao_informados = false;
-						}
-						if (document.getElementsByName("referencia")[0].value != null
-								&& document.getElementsByName("referencia")[0].value != "") {
-							dados_nao_informados = false;
-						}
-						if (document.getElementsByName("email")[0].value != null
-								&& document.getElementsByName("email")[0].value != "") {
-							dados_nao_informados = false;
-						}
-						if (dados_nao_informados) {
-							alert('Nome, endereco, area, ddi, ddd, celular, cep, referencia e ou email não preenchidos!');
+						if (document.getElementsByName("descricao")[0].value == null
+								|| document.getElementsByName("descricao")[0].value == "") {
+							alert('Descricao não preenchida!');
 							return false;
 						} else {
 							var selecionado = false;
-							for (var i = 0; i < document
-									.getElementsByName("id").length; i++) {
-								if (document.getElementsByName("id")[i].checked) {
+							for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+								if (document.getElementsByName("name_radio")[i].checked) {
 									selecionado = true;
 								}
 							}
@@ -167,25 +163,11 @@
 								alert('Registro não selecionado para ser alterado!');
 								return false;
 							} else {
-								document.getElementsByName("nome_myform1")[0].value = document
-										.getElementsByName("nome")[0].value;
-								document.getElementsByName("endereco_myform1")[0].value = document
-										.getElementsByName("endereco")[0].value;
-								document.getElementsByName("area_myform1")[0].value = document
-										.getElementsByName("area")[0].value;
-								document.getElementsByName("ddi_whatsap_myform1")[0].value = document
-										.getElementsByName("ddi_whatsap")[0].value;
-								document.getElementsByName("ddd_whatsap_myform1")[0].value = document
-										.getElementsByName("ddd_whatsap")[0].value;
-								document.getElementsByName("celular_whatsap_myform1")[0].value = document
-										.getElementsByName("celular_whatsap")[0].value;
-								document.getElementsByName("cep_myform1")[0].value = document
-										.getElementsByName("cep")[0].value;
-								document.getElementsByName("referencia_myform1")[0].value = document
-										.getElementsByName("referencia")[0].value;
-								document.getElementsByName("email_myform1")[0].value = document
-										.getElementsByName("email")[0].value;
-								document.myform2.action = "AlterarCliente.jsp";
+								if (confirm("Confirma Alteração!") == true) {
+									document.myform1.action = "{{ .Host }}/CadastroCliente";
+								} else {
+									return false;
+								}
 							}
 						}
 					}
@@ -212,9 +194,9 @@
 					function validaemail(inputText) {
 						var retorno = true;
 						// Match the date format through regular expression  
-						if (!document.myform1.email.value = '') {
+						if (document.myform1.email.value != '') {
 							if (!inputText.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/)) {
-								alert('Formato do email \"' + inputText + '\" est� invalido!\nDigite novamente!');
+								alert('Formato do email \"' + inputText + '\" está invalido!\nDigite novamente!');
 								document.myform1.email.value = '';
 								document.myform1.email.focus();
 								retorno = false;
@@ -264,18 +246,54 @@
 								<td>
 									<h1>
 										<input type="submit" name="operation"
-											onclick="document.pressed=this.value" value="Recuperar">
+											onclick="document.pressed=this.value" value="Eliminar" disabled>
+									</h1>
+								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Alterar" disabled>
 									</h1>
 								</td>
 							</tr>
 						</table> <br><br><br>
+			</div>
+			<div id="Colunas">
+				  	<h1>
+				 	<table>
+					{{range $key1, $value1 := .TabelaDados }}
+						{{if $value1}}
+							<!--<tr>-->
+							{{range $key2, $value2 := .}}
+							 	{{if $key2}}
+								 	{{if $value2}}
+										<!-- {{if eq $key2 1}}
+											<td>{{$value2}}</td>
+										{{end}} disabled show id-->
+										{{if eq $key2 2}}
+										<input type="hidden" name="descricao_hidden" value="{{$value2}}"> 
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 3}}
+											<!-- <td>{{$value2}}</td> disable show ts -->
+											</tr>
+										{{end}}
+									{{end}}
+								{{else}}
+								 	{{if $value2}}
+										<tr><td><input type="radio" id="id_radio" name="name_radio" value="{{$value2}}" onchange="handleChangeRadio();"></td>
+										<td><input type="checkbox" id="id_checkbox" name="name_checkbox" value="{{$value2}}" onchange="handleChangeCheckBox();"></td>
+									{{end}}
+								{{end}}
+							{{end}}
+						 	<!--</tr>-->
+						 {{end}}
+					{{end}}
+				</table>
+					</h1>
+			</div>
 				</form>
 <button id="demo" onclick="copyToClipboard(document.getElementById('demo').innerHTML)">Copiar URL</button>
- <!--
-	<a href="/<%=deposito%>/cadastro_cliente.jsp?flg_pagina=<%out.print(pagina_anterior);%>">P�gina&nbsp;anterior&nbsp;[<%out.print(pagina_anterior==0?1:pagina_anterior + 1);%> de <%out.print(total_paginas);%>]</a><br>
-	<a href="/<%=deposito%>/cadastro_cliente.jsp?flg_pagina=<%out.print(pagina_posterior);%>">P�gina&nbsp;posterior&nbsp;[<%out.print(pagina_posterior==1?2:pagina_posterior);%> de <%out.print(total_paginas);%>]</a>
- -->
-			</div>
 			<div id="content_bottom"></div>
 		</div>
 	</div>
