@@ -32,7 +32,7 @@ func cadastro_preco(w http.ResponseWriter, r *http.Request, html string, d *data
 	rows, err := d.db.Query(cmd)
 	println(cmd)
 	if err != nil {
-		log.Fatal(err)
+		println(err)
 	}
 	var row int32
 	row = 0
@@ -61,7 +61,7 @@ func cadastro_preco(w http.ResponseWriter, r *http.Request, html string, d *data
 	rows, err = d.db.Query(cmd)
 	println(cmd)
 	if err != nil {
-		log.Fatal(err)
+		println(err)
 	}
 	row = 0
 	for rows.Next() {

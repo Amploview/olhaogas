@@ -2,7 +2,7 @@ package main
 
 import "database/sql"
 
-const sizeCols = 10
+const sizeCols = 15
 const sizeRows = 30
 
 type data struct {
