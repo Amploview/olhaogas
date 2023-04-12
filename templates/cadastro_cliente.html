@@ -84,7 +84,13 @@
 					}
 					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
 						if (document.getElementsByName("name_radio")[i].checked) {
-							document.getElementsByName("descricao")[0].value = document.getElementsByName("descricao_hidden")[i].value;
+							document.getElementsByName("nome")[0].value = document.getElementsByName("nome_hidden")[i].value;
+							document.getElementsByName("endereco")[0].value = document.getElementsByName("endereco_hidden")[i].value;
+							document.getElementsByName("cep")[0].value = document.getElementsByName("cep_hidden")[i].value;
+							document.getElementsByName("ponto_de_referencia")[0].value = document.getElementsByName("ponto_de_referencia_hidden")[i].value;
+							document.getElementsByName("ddd")[0].value = document.getElementsByName("ddd_hidden")[i].value;
+							document.getElementsByName("telefone")[0].value = document.getElementsByName("telefone_hidden")[i].value;
+							document.getElementsByName("email")[0].value = document.getElementsByName("email_hidden")[i].value;
 						}
 					}
 				}
@@ -108,12 +114,18 @@
 							document.getElementsByName("operation")[i].disabled = true;
 						}
 					}
-					document.getElementsByName("descricao")[0].value = "";
+					document.getElementsByName("nome")[0].value = "";
+					document.getElementsByName("endereco")[0].value = "";
+					document.getElementsByName("cep")[0].value = "";
+					document.getElementsByName("ponto_de_referencia")[0].value = "";
+					document.getElementsByName("ddd")[0].value = "";
+					document.getElementsByName("telefone")[0].value = "";
+					document.getElementsByName("email")[0].value = "";
 				}
 				function onsubmitform() {
 					if (document.pressed == 'Inserir') {
-						if (document.getElementsByName("descricao")[0].value == null
-								|| document.getElementsByName("descricao")[0].value == "") {
+						if (document.getElementsByName("nome")[0].value == null
+								|| document.getElementsByName("nome")[0].value == "") {
 							alert('Descricao não preenchida!');
 							return false;
 						} else {
@@ -148,8 +160,8 @@
 							}
 						}
 					} else if (document.pressed == 'Alterar') {
-						if (document.getElementsByName("descricao")[0].value == null
-								|| document.getElementsByName("descricao")[0].value == "") {
+						if (document.getElementsByName("nome")[0].value == null
+								|| document.getElementsByName("nome")[0].value == "") {
 							alert('Descricao não preenchida!');
 							return false;
 						} else {
@@ -213,21 +225,41 @@
 						Endereco&nbsp;:&nbsp;<input type="text" name="endereco">
 					</h1>
 					<h1>
-						Area&nbsp;:&nbsp;<input type="text" name="area">
-						<h1>
-							(DDD)Telefone&nbsp;:&nbsp;<input type="hidden" name="ddi_whatsap" value="55" min="1" step="1" max="999" maxlength="3"><input type="number" name="ddd_whatsap" value="21" min="1" step="1" max="99" maxlength="2">-<input type="number" name="celular_whatsap" min="1" step="1" max="999999999" maxlength="9">
-						</h1>
-						<h1>
-							Cep/Referencia&nbsp;:&nbsp;<input type="number" name="cep" min="1" step="1" max="99999" maxlength="5" value="">/<input type="text" name="referencia" value="">
-						</h1>
-						<h1>
-							Email&nbsp;:&nbsp;<input type="email" name="email"
-								pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"	onchange="validaemail(document.myform1.email.value)" title="Formato de email obrigat�rio, por exemplo abc@cde.com.br" value="">
-						</h1>
-<!--						<br>
-						<h1>
-							Avise g�s no final&nbsp;:&nbsp;Sim
-						</h1> -->
+						Cep/Referencia&nbsp;:&nbsp;<input type="number" name="cep" min="1" step="1" max="99999" maxlength="5" value="">/<input type="text" name="ponto_de_referencia" value="">
+					</h1>
+					<h1>
+						Area&nbsp;:&nbsp;<select name="id_area">
+							<option value=""></option>
+							{{range $key1, $value1 := .Area }}
+								{{if $value1}}
+									{{range $key2, $value2 := .}}
+										{{if $key2}}
+											{{if $value2}}
+												{{if eq $key2 1}}
+													<option value="{{$value2}}">
+												{{end}}
+												{{if eq $key2 2}}
+													{{$value2}}</option>
+												{{end}}
+											{{end}}
+										{{end}}
+									{{end}}
+								{{end}}
+							{{end}}
+						</select>
+					</h1>
+					<h1>
+						(DDD)Telefone&nbsp;:&nbsp;<input type="hidden" name="ddi" value="55" min="1" step="1" max="999" maxlength="3"><input type="number" name="ddd" value="21" min="1" step="1" max="99" maxlength="2">-<input type="number" name="telefone" min="1" step="1" max="999999999" maxlength="9">
+					</h1>
+					<h1>
+						Email&nbsp;:&nbsp;<input type="email" name="email"
+							pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"	onchange="validaemail(document.myform1.email.value)" title="Formato de email obrigat�rio, por exemplo abc@cde.com.br" value="">
+					</h1>
+					<h1>
+						Avis gás no final&nbsp;:&nbsp;<input type="radio" name="flg_aviso_gas_final"
+							value="1">Sim</input>&nbsp;<input type="radio" name="flg_aviso_gas_final"
+							value="0">não</input>
+					</h1>
 						<br>
 						<table border="1" align="left">
 							<tr>
@@ -271,10 +303,43 @@
 											<td>{{$value2}}</td>
 										{{end}} disabled show id-->
 										{{if eq $key2 2}}
-										<input type="hidden" name="descricao_hidden" value="{{$value2}}"> 
+										<input type="hidden" name="nome_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
 										{{if eq $key2 3}}
+										<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 4}}
+										<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 5}}
+										<input type="hidden" name="cep_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 6}}
+										<input type="hidden" name="endereco_hidden" value="{{$value2}}"> 
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 7}}
+										<input type="hidden" name="ponto_de_referencia_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 8}}
+										<input type="hidden" name="ddi_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 9}}
+											<td>({{$value2}})
+										<input type="hidden" name="ddd_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 10}}
+											{{$value2}}</td>
+										<input type="hidden" name="telefone_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 11}}
+										<input type="hidden" name="email_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 12}}
+										<input type="hidden" name="flg_aviso_gas_final_hidden" value="{{$value2}}"> 
+										{{end}}
+										{{if eq $key2 13}}
 											<!-- <td>{{$value2}}</td> disable show ts -->
 											</tr>
 										{{end}}

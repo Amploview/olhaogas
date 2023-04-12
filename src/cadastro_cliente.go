@@ -20,7 +20,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		}
 	}
 	println("Carregando FK's")
-	for i := 0; i < sizeRows; i++ { //Incicialização tabelas fk Glp e area
+	for i := 0; i < sizeRows; i++ { //Incicialização tabelas fk Area
 		d.Area[i][0] = "" //id
 		d.Area[i][1] = "" //descricao
 	}
@@ -92,7 +92,6 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		var ts string
 		var rownum int
 		err = rows.Scan(&rownum, &id, &nome, &id_area, &descricao_area, &cep, &endereco, &ponto_de_referencia, &ddi, &ddd, &telefone, &email, &flg_aviso_gas_final, &ts)
-
 		if err != nil {
 			println(err)
 		}
