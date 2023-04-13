@@ -61,6 +61,16 @@
 							document.getElementsByName("operation")[i].disabled = false;
 						}
 					}
+					document.getElementsByName("nome")[0].value = "";
+					document.getElementsByName("endereco")[0].value = "";
+					document.getElementsByName("cep")[0].value = "";
+					document.getElementsByName("id_area")[0].value = "";
+					document.getElementsByName("ponto_de_referencia")[0].value = "";
+					document.getElementsByName("ddd")[0].value = "";
+					document.getElementsByName("telefone")[0].value = "";
+					document.getElementsByName("email")[0].value = "";
+					document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
+					document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
 				}
 				function handleChangeRadio() {
 					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
@@ -87,10 +97,17 @@
 							document.getElementsByName("nome")[0].value = document.getElementsByName("nome_hidden")[i].value;
 							document.getElementsByName("endereco")[0].value = document.getElementsByName("endereco_hidden")[i].value;
 							document.getElementsByName("cep")[0].value = document.getElementsByName("cep_hidden")[i].value;
+							document.getElementsByName("id_area")[0].value = document.getElementsByName("id_area_hidden")[i].value;
 							document.getElementsByName("ponto_de_referencia")[0].value = document.getElementsByName("ponto_de_referencia_hidden")[i].value;
 							document.getElementsByName("ddd")[0].value = document.getElementsByName("ddd_hidden")[i].value;
 							document.getElementsByName("telefone")[0].value = document.getElementsByName("telefone_hidden")[i].value;
 							document.getElementsByName("email")[0].value = document.getElementsByName("email_hidden")[i].value;
+							document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
+							document.getElementsByName("flg_aviso_gas_final")[1].checked = true;
+							if (document.getElementsByName("flg_aviso_gas_final_hidden")[i].value == "1") {
+								document.getElementsByName("flg_aviso_gas_final")[0].checked = true;
+								document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
+							}
 						}
 					}
 				}
@@ -117,10 +134,13 @@
 					document.getElementsByName("nome")[0].value = "";
 					document.getElementsByName("endereco")[0].value = "";
 					document.getElementsByName("cep")[0].value = "";
+					document.getElementsByName("id_area")[0].value = "";
 					document.getElementsByName("ponto_de_referencia")[0].value = "";
 					document.getElementsByName("ddd")[0].value = "";
 					document.getElementsByName("telefone")[0].value = "";
 					document.getElementsByName("email")[0].value = "";
+					document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
+					document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
 				}
 				function onsubmitform() {
 					if (document.pressed == 'Inserir') {
@@ -187,10 +207,10 @@
 				}
 				function copyToClipboard(text) {
 					var selecionado = false;
-					for (var i = 0; i < document.getElementsByName("id").length; i++) {
-						if (document.getElementsByName("id")[i].checked) {
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
 							selecionado = true;
-						  	window.prompt('Click Ctrl+C', document.getElementsByName("url")[i].value);
+						  	window.prompt('Click Ctrl+C', document.getElementsByName("url_hidden")[i].value);
 						}
 					}
 					if (!selecionado) {
@@ -219,7 +239,7 @@
 				</script>
 				<form name="myform1" onsubmit="return onsubmitform();">
 					<h1>
-						Nome&nbsp;:&nbsp;<input type="text" name="nome">
+						Nome&nbsp;:&nbsp;<input type="text" name="nome" onClick="handleclickDescricao()">
 					</h1>
 					<h1>
 						Endereco&nbsp;:&nbsp;<input type="text" name="endereco">
@@ -256,7 +276,7 @@
 							pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"	onchange="validaemail(document.myform1.email.value)" title="Formato de email obrigat�rio, por exemplo abc@cde.com.br" value="">
 					</h1>
 					<h1>
-						Avis gás no final&nbsp;:&nbsp;<input type="radio" name="flg_aviso_gas_final"
+						Avisar gás no final&nbsp;:&nbsp;<input type="radio" name="flg_aviso_gas_final"
 							value="1">Sim</input>&nbsp;<input type="radio" name="flg_aviso_gas_final"
 							value="0">não</input>
 					</h1>
@@ -287,6 +307,9 @@
 											onclick="document.pressed=this.value" value="Alterar" disabled>
 									</h1>
 								</td>
+								<td>
+					<button id="demo" onclick="copyToClipboard(document.getElementById('demo').innerHTML)">Copiar URL</button>
+								</td>
 							</tr>
 						</table> <br><br><br>
 			</div>
@@ -299,9 +322,10 @@
 							{{range $key2, $value2 := .}}
 							 	{{if $key2}}
 								 	{{if $value2}}
-										<!-- {{if eq $key2 1}}
-											<td>{{$value2}}</td>
-										{{end}} disabled show id-->
+										{{if eq $key2 1}}
+										<input type="hidden" name="url_hidden" value="//www.olhaogas.com.br/CadastoPedido?id={{$value2}}"> 
+										<!--	<td>{{$value2}}</td> disabled show id-->
+										{{end}}
 										{{if eq $key2 2}}
 										<input type="hidden" name="nome_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
@@ -358,7 +382,6 @@
 					</h1>
 			</div>
 				</form>
-<button id="demo" onclick="copyToClipboard(document.getElementById('demo').innerHTML)">Copiar URL</button>
 			<div id="content_bottom"></div>
 		</div>
 	</div>

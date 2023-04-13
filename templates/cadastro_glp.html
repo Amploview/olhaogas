@@ -61,6 +61,9 @@
 							document.getElementsByName("operation")[i].disabled = false;
 						}
 					}
+					document.getElementsByName("descricao")[0].value = "";
+					document.getElementsByName("glp_default")[0].checked = false;
+					document.getElementsByName("glp_default")[1].checked = false;
 				}
 				function handleChangeRadio() {
 					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {

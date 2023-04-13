@@ -66,7 +66,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 	where = ""
 	if r.Form.Get("operation") == "Localizar" {
 		if r.Form.Get("nome") != "" {
-			where = " where nome like '" + r.Form.Get("nome") + "%'"
+			where += " where nome like '" + r.Form.Get("nome") + "%'"
 		}
 	}
 	cmd = "select * from (select row_number() over (order by cliente.id) rownum, cliente.id as id, nome, id_area, area.descricao as descricao_area, cep, endereco, ponto_de_referencia, ddi, ddd, telefone, email, flg_aviso_gas_final, cliente.ts as ts from cliente, area where cliente.id_area = area.id order by cliente.id) " + where
@@ -110,6 +110,9 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		d.TabelaDados[row][12] = strconv.Itoa(flg_aviso_gas_final)
 		d.TabelaDados[row][13] = ts
 		row++
+		if row >= sizeRows {
+			break
+		}
 	}
 	err = rows.Err()
 	if err != nil {
