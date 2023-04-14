@@ -42,7 +42,7 @@ func cadastro_glp(w http.ResponseWriter, r *http.Request, html string, d *data) 
 	if r.Form.Get("operation") == "Localizar" {
 		if r.Form.Get("descricao") != "" || r.Form.Get("glp_default") != "" {
 			if r.Form.Get("descricao") != "" {
-				where += " where descricao like '" + r.Form.Get("descricao") + "%'"
+				where += " where descricao like '%" + r.Form.Get("descricao") + "%'"
 			}
 			if r.Form.Get("glp_default") != "" {
 				if where != "" {
@@ -88,6 +88,7 @@ func cadastro_glp(w http.ResponseWriter, r *http.Request, html string, d *data) 
 		println(err)
 	}
 	defer rows.Close()
+	rows.Close()
 	var Tot_elementos = row
 	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string
@@ -109,7 +110,7 @@ func cadastro_glp(w http.ResponseWriter, r *http.Request, html string, d *data) 
 					println("Efetuado reset do glp Default para " + r.Form.Get("descricao") + " se tornar o Default!")
 					d.TabelaDados[row][3] = "1"
 				}
-				cmd = "update glp set descricao = '" + descricao + "' , glp_default = " + glp_default + " ,ts = CURRENT_TIMESTAMP where id = " + id
+				cmd = "update glp set descricao = '" + descricao + "' , glp_default = " + glp_default + " , ts = CURRENT_TIMESTAMP where id = " + id
 				_, err := d.db.Exec(cmd)
 				println(cmd)
 				if err != nil {

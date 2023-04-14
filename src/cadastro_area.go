@@ -32,7 +32,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 	where = ""
 	if r.Form.Get("operation") == "Localizar" {
 		if r.Form.Get("descricao") != "" {
-			where = " where descricao like '" + r.Form.Get("descricao") + "%'"
+			where = " where descricao like '%" + r.Form.Get("descricao") + "%'"
 		}
 	}
 	cmd = "select * from (select row_number() over (order by id) rownum, id, descricao, ts from area order by id) " + where
@@ -63,6 +63,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		println(err)
 	}
 	defer rows.Close()
+	rows.Close()
 	var Tot_elementos = row
 	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string
@@ -72,7 +73,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		if contains(radioSelected, d.TabelaDados[row][0]) {
 			if r.Form.Get("operation") == "Alterar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
-				cmd = "update area set descricao = '" + descricao + "' ,ts = CURRENT_TIMESTAMP where id = " + id
+				cmd = "update area set descricao = '" + descricao + "' , ts = CURRENT_TIMESTAMP where id = " + id
 				_, err := d.db.Exec(cmd)
 				println(cmd)
 				if err != nil {

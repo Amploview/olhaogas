@@ -66,8 +66,25 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 	where = ""
 	if r.Form.Get("operation") == "Localizar" {
 		if r.Form.Get("nome") != "" {
-			where += " where nome like '" + r.Form.Get("nome") + "%'"
+			where += " where nome like '%" + r.Form.Get("nome") + "%'"
 		}
+		if r.Form.Get("endereco") != "" {
+			if where != "" {
+				where += " and "
+			} else {
+				where += " where "
+			}
+			where += "endereco like '%" + r.Form.Get("endereco") + "%'"
+		}
+		if r.Form.Get("cep") != "" {
+			if where != "" {
+				where += " and "
+			} else {
+				where += " where "
+			}
+			where += "cep = " + r.Form.Get("cep")
+		}
+
 	}
 	cmd = "select * from (select row_number() over (order by cliente.id) rownum, cliente.id as id, nome, id_area, area.descricao as descricao_area, cep, endereco, ponto_de_referencia, ddi, ddd, telefone, email, flg_aviso_gas_final, cliente.ts as ts from cliente, area where cliente.id_area = area.id order by cliente.id) " + where
 	rows, err = d.db.Query(cmd)
@@ -119,6 +136,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		println(err)
 	}
 	defer rows.Close()
+	rows.Close()
 	var Tot_elementos = row
 	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string
@@ -149,16 +167,16 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 			if r.Form.Get("operation") == "Alterar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
 				cmd = "update cliente set nome = '" + nome +
-					", id_area = " + id_area +
+					"', id_area = " + id_area +
 					", cep = " + cep +
 					", endereco = '" + endereco +
-					"' , ponto_de_referencia = '" + ponto_de_referencia +
-					"' , ddi = " + ddi +
+					"', ponto_de_referencia = '" + ponto_de_referencia +
+					"', ddi = " + ddi +
 					", ddd = " + ddd +
 					", telefone = " + telefone +
 					", email = '" + email +
-					"' , flg_aviso_gas_final = " + flg_aviso_gas_final +
-					" ,ts = CURRENT_TIMESTAMP where id = " + id
+					"', flg_aviso_gas_final = " + flg_aviso_gas_final +
+					", ts = CURRENT_TIMESTAMP where id = " + id
 				_, err := d.db.Exec(cmd)
 				println(cmd)
 				if err != nil {

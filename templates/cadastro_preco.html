@@ -84,7 +84,9 @@
 					}
 					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
 						if (document.getElementsByName("name_radio")[i].checked) {
-							document.getElementsByName("descricao")[0].value = document.getElementsByName("descricao_hidden")[i].value;
+							document.getElementsByName("preco")[0].value = document.getElementsByName("preco_hidden")[i].value;
+							document.getElementsByName("id_glp")[0].value = document.getElementsByName("id_glp_hidden")[i].value;
+							document.getElementsByName("id_area")[0].value = document.getElementsByName("id_area_hidden")[i].value;
 						}
 					}
 				}
@@ -108,13 +110,15 @@
 							document.getElementsByName("operation")[i].disabled = true;
 						}
 					}
-					document.getElementsByName("descricao")[0].value = "";
+					document.getElementsByName("preco")[0].value = "";
+					document.getElementsByName("id_glp")[0].value = "";
+					document.getElementsByName("id_area")[0].value = "";
 				}
 				function onsubmitform() {
 					if (document.pressed == 'Inserir') {
-						if (document.getElementsByName("descricao")[0].value == null
-								|| document.getElementsByName("descricao")[0].value == "") {
-							alert('Descricao não preenchida!');
+						if (document.getElementsByName("preco")[0].value == null
+								|| document.getElementsByName("preco")[0].value == "") {
+							alert('Preço não preenchido!');
 							return false;
 						} else {
 							if (confirm("Confirma Inserção!") == true) {
@@ -148,9 +152,9 @@
 							}
 						}
 					} else if (document.pressed == 'Alterar') {
-						if (document.getElementsByName("descricao")[0].value == null
-								|| document.getElementsByName("descricao")[0].value == "") {
-							alert('Descricao não preenchida!');
+						if (document.getElementsByName("preco")[0].value == null
+								|| document.getElementsByName("preco")[0].value == "") {
+							alert('Preço não preenchido!');
 							return false;
 						} else {
 							var selecionado = false;
@@ -179,7 +183,7 @@
 			<div id="content_main">
 				<form name="myform1" onsubmit="return onsubmitform();">
 					<h1>
-						Preco&nbsp;:&nbsp;<input type="number" name="preco"  min="0.01" step="0.01" max="2500" value="">
+						Preço&nbsp;:&nbsp;<input type="number" name="preco"  min="0.01" step="0.01" max="2500" value="">
 					</h1>
 					<br>
 						<h1>
@@ -268,9 +272,15 @@
 										<input type="hidden" name="preco_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
+										{{if eq $key2 3}}
+										<input type="hidden" name="id_glp_hidden" value="{{$value2}}"> 
+										{{end}}
 										{{if eq $key2 4}}
 										<input type="hidden" name="descricao_glp_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 5}}
+										<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 6}}
 										<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
