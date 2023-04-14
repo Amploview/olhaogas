@@ -7,7 +7,7 @@ micros:
     primary: true
     commands:
       #- go build cmd/main.go
-      - go build ./src/main.go ./src/cadastro_area.go ./src/cadastro_glp.go ./src/cadastro_preco.go ./src/cadastro_cliente.go ./src/cadastro_cobertura.go ./src/cadastro_usuario.go ./src/cadastro_pedido.go ./src/relatorio_area.go ./src/relatorio_glp.go ./src/relatorio_preco.go ./src/relatorio_cliente.go ./src/relatorio_pedido.go
+      - go build ./src/main.go ./src/definicao.go ./src/cadastro_area.go ./src/cadastro_glp.go ./src/cadastro_preco.go ./src/cadastro_cliente.go ./src/cadastro_cobertura.go ./src/cadastro_usuario.go ./src/cadastro_pedido.go ./src/relatorio_area.go ./src/relatorio_glp.go ./src/relatorio_preco.go ./src/relatorio_cliente.go ./src/relatorio_pedido.go
     include:
       - main
       - images/
