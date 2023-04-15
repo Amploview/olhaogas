@@ -38,10 +38,10 @@ func genericExecTemplate(w http.ResponseWriter, r *http.Request, html string, tm
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	err := r.ParseForm()
-	if err != nil {
-		log.Fatal(err)
-	}
+	//err := r.ParseForm()
+	//if err != nil {
+	//log.Fatal(err)
+	//}
 	//fmt.Fprintln(w, "Descricao : ", r.Form.Get("descricao"))
 	//fmt.Fprintln(w, "Operacao : ", r.Form.Get("operation"))
 	//fmt.Fprintln(w, "Html : ", html)
@@ -87,6 +87,10 @@ func genericExecTemplate(w http.ResponseWriter, r *http.Request, html string, tm
 		}
 	case "cadastro_cliente":
 		cadastro_cliente(w, r, html, d)
+		fmt.Fprintf(w, "<input type=\"hidden\" name=\"reload\" value="+strconv.Itoa(d.Reload)+">")
+		if d.Reload != 0 {
+			d.Reload = -1
+		}
 	case "cadastro_cobertura":
 		cadastro_cobertura(w, r, html, d)
 	case "cadastro_usuario":

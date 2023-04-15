@@ -63,7 +63,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		println(err)
 	}
 	defer rows.Close()
-	rows.Close()
+	//rows.Close()
 	var Tot_elementos = row
 	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string

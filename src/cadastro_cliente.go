@@ -10,9 +10,9 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 	println("cadastro_cliente")
 	var cmd string
 	r.ParseForm()
-	checkboxSelected := r.Form["name_checkbox"]
-	radioSelected := r.Form["name_radio"]
-	println("Operacao         : " + r.Form.Get("operation"))
+	checkboxSelected := r.PostForm["name_checkbox"]
+	radioSelected := r.PostForm["name_radio"]
+	println("Operacao         : " + r.PostFormValue("operation"))
 	println("Action           : " + strings.Trim(html, ".html"))
 	for i := 0; i < sizeRows; i++ {
 		for j := 0; j < sizeCols; j++ {
@@ -53,36 +53,36 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		println(err)
 	}
 	defer rows.Close()
-	if r.Form.Get("operation") == "Inserir" {
-		cmd = "insert into Cliente(nome) values ('" + r.Form.Get("nome") + "')"
+	if r.PostFormValue("operation") == "Inserir" {
+		cmd = "insert into Cliente(nome) values ('" + r.PostFormValue("nome") + "')"
 		_, err := d.db.Exec(cmd)
 		println(cmd)
 		if err != nil {
 			println(err)
 		}
-		println(r.Form.Get("nome") + " foi incluido!")
+		println(r.PostFormValue("nome") + " foi incluido!")
 	}
 	var where string
 	where = ""
-	if r.Form.Get("operation") == "Localizar" {
-		if r.Form.Get("nome") != "" {
-			where += " where nome like '%" + r.Form.Get("nome") + "%'"
+	if r.PostFormValue("operation") == "Localizar" {
+		if r.PostFormValue("nome") != "" {
+			where += " where nome like '%" + r.PostFormValue("nome") + "%'"
 		}
-		if r.Form.Get("endereco") != "" {
+		if r.PostFormValue("endereco") != "" {
 			if where != "" {
 				where += " and "
 			} else {
 				where += " where "
 			}
-			where += "endereco like '%" + r.Form.Get("endereco") + "%'"
+			where += "endereco like '%" + r.PostFormValue("endereco") + "%'"
 		}
-		if r.Form.Get("cep") != "" {
+		if r.PostFormValue("cep") != "" {
 			if where != "" {
 				where += " and "
 			} else {
 				where += " where "
 			}
-			where += "cep = " + r.Form.Get("cep")
+			where += "cep = " + r.PostFormValue("cep")
 		}
 
 	}
@@ -136,7 +136,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		println(err)
 	}
 	defer rows.Close()
-	rows.Close()
+	//rows.Close()
 	var Tot_elementos = row
 	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string
@@ -152,19 +152,19 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		var email string
 		var flg_aviso_gas_final string
 		id = d.TabelaDados[row][1]
-		nome = r.Form.Get("nome")
-		id_area = r.Form.Get("id_area")
-		descricao_area = r.Form.Get("descricao_area")
-		cep = r.Form.Get("cep")
-		endereco = r.Form.Get("endereco")
-		ponto_de_referencia = r.Form.Get("ponto_de_referencia")
-		ddi = r.Form.Get("ddi")
-		ddd = r.Form.Get("ddd")
-		telefone = r.Form.Get("telefone")
-		email = r.Form.Get("email")
-		flg_aviso_gas_final = r.Form.Get("flg_aviso_gas_final")
+		nome = r.PostFormValue("nome")
+		id_area = r.PostFormValue("id_area")
+		descricao_area = r.PostFormValue("descricao_area")
+		cep = r.PostFormValue("cep")
+		endereco = r.PostFormValue("endereco")
+		ponto_de_referencia = r.PostFormValue("ponto_de_referencia")
+		ddi = r.PostFormValue("ddi")
+		ddd = r.PostFormValue("ddd")
+		telefone = r.PostFormValue("telefone")
+		email = r.PostFormValue("email")
+		flg_aviso_gas_final = r.PostFormValue("flg_aviso_gas_final")
 		if contains(radioSelected, d.TabelaDados[row][0]) {
-			if r.Form.Get("operation") == "Alterar" {
+			if r.PostFormValue("operation") == "Alterar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
 				cmd = "update cliente set nome = '" + nome +
 					"', id_area = " + id_area +
@@ -215,7 +215,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 				d.TabelaDados[row][10] = telefone
 				d.TabelaDados[row][11] = email
 				d.TabelaDados[row][12] = flg_aviso_gas_final
-			} else if r.Form.Get("operation") == "Eliminar" {
+			} else if r.PostFormValue("operation") == "Eliminar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
 				cmd = "delete from cliente where id = " + id
 				_, err := d.db.Exec(cmd)
@@ -241,7 +241,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 			}
 		}
 		if contains(checkboxSelected, d.TabelaDados[row][0]) {
-			if r.Form.Get("operation") == "Eliminar" {
+			if r.PostFormValue("operation") == "Eliminar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
 				cmd = "delete from cliente where id = " + id
 				_, err := d.db.Exec(cmd)
@@ -267,11 +267,11 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 			}
 		}
 	}
-	if r.Form.Get("operation") == "Inserir" {
+	if r.PostFormValue("operation") == "Inserir" {
 		d.Reload++
-	} else if r.Form.Get("operation") == "Alterar" {
+	} else if r.PostFormValue("operation") == "Alterar" {
 		d.Reload++
-	} else if r.Form.Get("operation") == "Eliminar" {
+	} else if r.PostFormValue("operation") == "Eliminar" {
 		d.Reload++
 	} else {
 		d.Reload++
