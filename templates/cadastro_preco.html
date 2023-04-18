@@ -37,6 +37,10 @@
 										document.getElementsByName("operation")[i].click();
 									}
 								}
+								//const queryString = window.location.search;
+								//const urlParams = new URLSearchParams(queryString);
+								//const id_glp = urlParams.get('id_glp');
+								//const id_area = urlParams.get('id_area');
 							}
       						break;
   						}
@@ -61,6 +65,9 @@
 							document.getElementsByName("operation")[i].disabled = false;
 						}
 					}
+					document.getElementsByName("preco")[0].value = "";
+					document.getElementsByName("id_glp")[0].value = "";
+					document.getElementsByName("id_area")[0].value = "";
 				}
 				function handleChangeRadio() {
 					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
@@ -187,7 +194,7 @@
 					</h1>
 					<br>
 						<h1>
-							Glp&nbsp;:&nbsp;<select name="id_glp">
+							Glp&nbsp;:&nbsp;<select name="id_glp" selecionado>
 									<option value=""></option>
 									{{range $key1, $value1 := .Glp }}
 										{{if $value1}}

@@ -73,13 +73,13 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 		if contains(radioSelected, d.TabelaDados[row][0]) {
 			if r.Form.Get("operation") == "Alterar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
+				println(d.TabelaDados[row][1] + " esta sendo alterado de " + d.TabelaDados[row][2] + " para " + descricao + "!")
 				cmd = "update area set descricao = '" + descricao + "' , ts = CURRENT_TIMESTAMP where id = " + id
 				_, err := d.db.Exec(cmd)
 				println(cmd)
 				if err != nil {
 					println(err)
 				}
-				println(d.TabelaDados[row][1] + " foi alterado de " + d.TabelaDados[row][2] + " para " + descricao + "!")
 				d.TabelaDados[row][2] = descricao
 			} else if r.Form.Get("operation") == "Eliminar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")

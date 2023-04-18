@@ -10,88 +10,57 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 	println("cadastro_cliente")
 	var cmd string
 	r.ParseForm()
-	checkboxSelected := r.PostForm["name_checkbox"]
-	radioSelected := r.PostForm["name_radio"]
-	println("Operacao         : " + r.PostFormValue("operation"))
+	checkboxSelected := r.Form["name_checkbox"]
+	radioSelected := r.Form["name_radio"]
+	println("Operacao         : " + r.Form.Get("operation"))
 	println("Action           : " + strings.Trim(html, ".html"))
 	for i := 0; i < sizeRows; i++ {
 		for j := 0; j < sizeCols; j++ {
 			d.TabelaDados[i][j] = ""
 		}
 	}
-	println("Carregando FK's")
-	for i := 0; i < sizeRows; i++ { //Incicialização tabelas fk Area
-		d.Area[i][0] = "" //id
-		d.Area[i][1] = "" //descricao
-	}
-	cmd = "select * from (select row_number() over (order by id) rownum, id as id_area, descricao as descricao_area from area order by id)"
-	rows, err := d.db.Query(cmd)
-	println(cmd)
-	if err != nil {
-		println(err)
-	}
-	var row int32
-	row = 0
-	for rows.Next() {
-		var id_area int
-		var descricao_area string
-		var rownum int
-		err = rows.Scan(&rownum, &id_area, &descricao_area)
-		if err != nil {
-			println(err)
-		}
-		d.Area[row][0] = strconv.Itoa(rownum - 1)
-		d.Area[row][1] = strconv.Itoa(id_area)
-		d.Area[row][2] = descricao_area
-		if err != nil {
-			println(err)
-		}
-		row++
-	}
-	err = rows.Err()
-	if err != nil {
-		println(err)
-	}
-	defer rows.Close()
-	if r.PostFormValue("operation") == "Inserir" {
-		cmd = "insert into Cliente(nome) values ('" + r.PostFormValue("nome") + "')"
+	if r.Form.Get("operation") == "Inserir" {
+		cmd = "insert into Cliente(nome) values ('" + r.Form.Get("nome") + "')"
 		_, err := d.db.Exec(cmd)
 		println(cmd)
 		if err != nil {
 			println(err)
 		}
-		println(r.PostFormValue("nome") + " foi incluido!")
+		println(r.Form.Get("nome") + " foi incluido!")
 	}
 	var where string
 	where = ""
-	if r.PostFormValue("operation") == "Localizar" {
-		if r.PostFormValue("nome") != "" {
-			where += " where nome like '%" + r.PostFormValue("nome") + "%'"
+	if r.Form.Get("operation") == "Localizar" {
+		if r.Form.Get("nome") != "" {
+			where += " where nome like '%" + r.Form.Get("nome") + "%'"
 		}
-		if r.PostFormValue("endereco") != "" {
+		if r.Form.Get("endereco") != "" {
 			if where != "" {
 				where += " and "
 			} else {
 				where += " where "
 			}
-			where += "endereco like '%" + r.PostFormValue("endereco") + "%'"
+			where += "endereco like '%" + r.Form.Get("endereco") + "%'"
 		}
-		if r.PostFormValue("cep") != "" {
+		if r.Form.Get("cep") != "" {
 			if where != "" {
 				where += " and "
 			} else {
 				where += " where "
 			}
-			where += "cep = " + r.PostFormValue("cep")
+			where += "cep = " + r.Form.Get("cep")
 		}
 
 	}
 	cmd = "select * from (select row_number() over (order by cliente.id) rownum, cliente.id as id, nome, id_area, area.descricao as descricao_area, cep, endereco, ponto_de_referencia, ddi, ddd, telefone, email, flg_aviso_gas_final, cliente.ts as ts from cliente, area where cliente.id_area = area.id order by cliente.id) " + where
-	rows, err = d.db.Query(cmd)
+	rows, err := d.db.Query(cmd)
 	println(cmd)
 	if err != nil {
 		println(err)
 	}
+	var row_sav int
+	row_sav = -1
+	var row int32
 	row = 0
 	for rows.Next() {
 		var id int
@@ -136,13 +105,12 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		println(err)
 	}
 	defer rows.Close()
-	//rows.Close()
+	rows.Close()
 	var Tot_elementos = row
 	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string
 		var nome string
 		var id_area string
-		var descricao_area string
 		var cep string
 		var endereco string
 		var ponto_de_referencia string
@@ -152,37 +120,20 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		var email string
 		var flg_aviso_gas_final string
 		id = d.TabelaDados[row][1]
-		nome = r.PostFormValue("nome")
-		id_area = r.PostFormValue("id_area")
-		descricao_area = r.PostFormValue("descricao_area")
-		cep = r.PostFormValue("cep")
-		endereco = r.PostFormValue("endereco")
-		ponto_de_referencia = r.PostFormValue("ponto_de_referencia")
-		ddi = r.PostFormValue("ddi")
-		ddd = r.PostFormValue("ddd")
-		telefone = r.PostFormValue("telefone")
-		email = r.PostFormValue("email")
-		flg_aviso_gas_final = r.PostFormValue("flg_aviso_gas_final")
+		nome = r.Form.Get("nome")
+		id_area = r.Form.Get("id_area")
+		cep = r.Form.Get("cep")
+		endereco = r.Form.Get("endereco")
+		ponto_de_referencia = r.Form.Get("ponto_de_referencia")
+		ddi = r.Form.Get("ddi")
+		ddd = r.Form.Get("ddd")
+		telefone = r.Form.Get("telefone")
+		email = r.Form.Get("email")
+		flg_aviso_gas_final = r.Form.Get("flg_aviso_gas_final")
 		if contains(radioSelected, d.TabelaDados[row][0]) {
-			if r.PostFormValue("operation") == "Alterar" {
+			if r.Form.Get("operation") == "Alterar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
-				cmd = "update cliente set nome = '" + nome +
-					"', id_area = " + id_area +
-					", cep = " + cep +
-					", endereco = '" + endereco +
-					"', ponto_de_referencia = '" + ponto_de_referencia +
-					"', ddi = " + ddi +
-					", ddd = " + ddd +
-					", telefone = " + telefone +
-					", email = '" + email +
-					"', flg_aviso_gas_final = " + flg_aviso_gas_final +
-					", ts = CURRENT_TIMESTAMP where id = " + id
-				_, err := d.db.Exec(cmd)
-				println(cmd)
-				if err != nil {
-					println(err)
-				}
-				println(d.TabelaDados[row][1] + " foi alterado de " + d.TabelaDados[row][2] + "/" +
+				println(d.TabelaDados[row][1] + " esta sendo alterado de " + d.TabelaDados[row][2] + "/" +
 					d.TabelaDados[row][3] + "/" +
 					d.TabelaDados[row][4] + "/" +
 					d.TabelaDados[row][5] + "/" +
@@ -204,9 +155,24 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 					telefone + "/" +
 					email + "/" +
 					flg_aviso_gas_final + "!")
+				cmd = "update cliente set nome = '" + nome +
+					"', id_area = " + id_area +
+					", cep = " + cep +
+					", endereco = '" + endereco +
+					"', ponto_de_referencia = '" + ponto_de_referencia +
+					"', ddi = " + ddi +
+					", ddd = " + ddd +
+					", telefone = " + telefone +
+					", email = '" + email +
+					"', flg_aviso_gas_final = " + flg_aviso_gas_final +
+					", ts = CURRENT_TIMESTAMP where id = " + id
+				_, err := d.db.Exec(cmd)
+				println(cmd)
+				if err != nil {
+					println(err)
+				}
 				d.TabelaDados[row][2] = nome
 				d.TabelaDados[row][3] = id_area
-				d.TabelaDados[row][4] = descricao_area
 				d.TabelaDados[row][5] = cep
 				d.TabelaDados[row][6] = endereco
 				d.TabelaDados[row][7] = ponto_de_referencia
@@ -215,7 +181,8 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 				d.TabelaDados[row][10] = telefone
 				d.TabelaDados[row][11] = email
 				d.TabelaDados[row][12] = flg_aviso_gas_final
-			} else if r.PostFormValue("operation") == "Eliminar" {
+				row_sav = row
+			} else if r.Form.Get("operation") == "Eliminar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
 				cmd = "delete from cliente where id = " + id
 				_, err := d.db.Exec(cmd)
@@ -241,7 +208,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 			}
 		}
 		if contains(checkboxSelected, d.TabelaDados[row][0]) {
-			if r.PostFormValue("operation") == "Eliminar" {
+			if r.Form.Get("operation") == "Eliminar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
 				cmd = "delete from cliente where id = " + id
 				_, err := d.db.Exec(cmd)
@@ -267,11 +234,47 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 			}
 		}
 	}
-	if r.PostFormValue("operation") == "Inserir" {
+	println("Carregando FK's")
+	for i := 0; i < sizeRows; i++ { //Incicialização tabelas fk Area
+		d.Area[i][0] = "" //id
+		d.Area[i][1] = "" //descricao
+	}
+	cmd = "select * from (select row_number() over (order by id) rownum, id as id_area, descricao as descricao_area from area order by id)"
+	rows, err = d.db.Query(cmd)
+	println(cmd)
+	if err != nil {
+		println(err)
+	}
+	row = 0
+	for rows.Next() {
+		var id_area int
+		var descricao_area string
+		var rownum int
+		err = rows.Scan(&rownum, &id_area, &descricao_area)
+		if err != nil {
+			println(err)
+		}
+		d.Area[row][0] = strconv.Itoa(rownum - 1)
+		d.Area[row][1] = strconv.Itoa(id_area)
+		d.Area[row][2] = descricao_area
+		if d.Area[row][1] == r.Form.Get("id_area") && row_sav > -1 {
+			d.TabelaDados[row_sav][4] = descricao_area
+		}
+		if err != nil {
+			println(err)
+		}
+		row++
+	}
+	err = rows.Err()
+	if err != nil {
+		println(err)
+	}
+	defer rows.Close()
+	if r.Form.Get("operation") == "Inserir" {
 		d.Reload++
-	} else if r.PostFormValue("operation") == "Alterar" {
+	} else if r.Form.Get("operation") == "Alterar" {
 		d.Reload++
-	} else if r.PostFormValue("operation") == "Eliminar" {
+	} else if r.Form.Get("operation") == "Eliminar" {
 		d.Reload++
 	} else {
 		d.Reload++

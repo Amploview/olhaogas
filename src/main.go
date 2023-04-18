@@ -38,10 +38,10 @@ func genericExecTemplate(w http.ResponseWriter, r *http.Request, html string, tm
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	//err := r.ParseForm()
-	//if err != nil {
-	//log.Fatal(err)
-	//}
+	err := r.ParseForm()
+	if err != nil {
+		println(err)
+	}
 	//fmt.Fprintln(w, "Descricao : ", r.Form.Get("descricao"))
 	//fmt.Fprintln(w, "Operacao : ", r.Form.Get("operation"))
 	//fmt.Fprintln(w, "Html : ", html)
