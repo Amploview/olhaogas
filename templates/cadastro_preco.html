@@ -272,25 +272,20 @@
 							{{range $key2, $value2 := .}}
 							 	{{if $key2}}
 								 	{{if $value2}}
-										<!-- {{if eq $key2 1}}
-											<td>{{$value2}}</td>
-										{{end}} disabled show id-->
+										{{if eq $key2 1}}
+											<!-- <td>{{$value2}}</td> disabled show id-->
+										{{end}}
 										{{if eq $key2 2}}
-										<input type="hidden" name="preco_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
 										{{if eq $key2 3}}
-										<input type="hidden" name="id_glp_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 4}}
-										<input type="hidden" name="descricao_glp_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
 										{{if eq $key2 5}}
-										<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 6}}
-										<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
 										{{if eq $key2 7}}
@@ -312,6 +307,37 @@
 					</h1>
 			</div>
 				</form>
+				{{range $key1, $value1 := .TabelaDados }}
+				{{if $value1}}
+					<!--<tr>-->
+					{{range $key2, $value2 := .}}
+						 {{if $key2}}
+							 {{if $value2}}
+								{{if eq $key2 1}}
+								{{end}}
+								{{if eq $key2 2}}
+								<input type="hidden" name="preco_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 3}}
+								<input type="hidden" name="id_glp_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 4}}
+								<input type="hidden" name="descricao_glp_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 5}}
+								<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 6}}
+								<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 7}}
+								{{end}}
+							{{end}}
+						{{end}}
+					{{end}}
+					 <!--</tr>-->
+				 {{end}}
+			{{end}}
 			<div id="content_bottom"></div>
 		</div>
 	</div>

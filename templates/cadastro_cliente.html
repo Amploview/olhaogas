@@ -323,45 +323,33 @@
 							 	{{if $key2}}
 								 	{{if $value2}}
 										{{if eq $key2 1}}
-										<input type="hidden" name="url_hidden" value="//www.olhaogas.com.br/CadastoPedido?id={{$value2}}"> 
-										<!--	<td>{{$value2}}</td> disabled show id-->
+										<!-- <td>{{$value2}}</td> disabled show id -->
 										{{end}}
 										{{if eq $key2 2}}
-										<input type="hidden" name="nome_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
 										{{if eq $key2 3}}
-										<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 4}}
-										<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 5}}
-										<input type="hidden" name="cep_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 6}}
-										<input type="hidden" name="endereco_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
 										{{if eq $key2 7}}
-										<input type="hidden" name="ponto_de_referencia_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 8}}
-										<input type="hidden" name="ddi_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 9}}
 											<td>({{$value2}})
-										<input type="hidden" name="ddd_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 10}}
 											{{$value2}}</td>
-										<input type="hidden" name="telefone_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 11}}
-										<input type="hidden" name="email_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 12}}
-										<input type="hidden" name="flg_aviso_gas_final_hidden" value="{{$value2}}"> 
 										{{end}}
 										{{if eq $key2 13}}
 											<!-- <td>{{$value2}}</td> disable show ts -->
@@ -382,6 +370,56 @@
 					</h1>
 			</div>
 				</form>
+				{{range $key1, $value1 := .TabelaDados }}
+				{{if $value1}}
+					<!--<tr>-->
+					{{range $key2, $value2 := .}}
+						 {{if $key2}}
+							 {{if $value2}}
+								{{if eq $key2 1}}
+								<input type="hidden" name="url_hidden" value="//www.olhaogas.com.br/CadastoPedido?id={{$value2}}"> 
+								{{end}}
+								{{if eq $key2 2}}
+								<input type="hidden" name="nome_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 3}}
+								<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 4}}
+								<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 5}}
+								<input type="hidden" name="cep_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 6}}
+								<input type="hidden" name="endereco_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 7}}
+								<input type="hidden" name="ponto_de_referencia_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 8}}
+								<input type="hidden" name="ddi_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 9}}
+								<input type="hidden" name="ddd_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 10}}
+								<input type="hidden" name="telefone_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 11}}
+								<input type="hidden" name="email_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 12}}
+								<input type="hidden" name="flg_aviso_gas_final_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 13}}
+								{{end}}
+							{{end}}
+						{{end}}
+					{{end}}
+					 <!--</tr>-->
+				 {{end}}
+			{{end}}
 			<div id="content_bottom"></div>
 		</div>
 	</div>

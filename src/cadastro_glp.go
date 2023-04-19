@@ -112,8 +112,11 @@ func cadastro_glp(w http.ResponseWriter, r *http.Request, html string, d *data) 
 						println(err)
 					}
 					println("Efetuado reset do glp Default para " + r.Form.Get("descricao") + " se tornar o Default!")
+					for row_glp_default := 0; int(row_glp_default) < int(Tot_elementos); row_glp_default++ {
+						d.TabelaDados[row_glp_default][3] = "0"
+					}
+					d.TabelaDados[row][3] = glp_default
 				}
-				d.TabelaDados[row][3] = glp_default
 				cmd = "update glp set descricao = '" + descricao + "' , glp_default = " + glp_default + " , ts = CURRENT_TIMESTAMP where id = " + id
 				_, err := d.db.Exec(cmd)
 				println(cmd)
