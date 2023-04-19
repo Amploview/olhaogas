@@ -20,91 +20,314 @@
 				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
 			</ul>
 		</div>
-
 		<div id="content">
-
 			<script type="text/javascript">
-	function onsubmitform()
-	{
-	     var selecionado;
-	     if (document.pressed == 'Inserir') {
-			if ((document.getElementsByName("id_usuario")[0].value == null ||
-				document.getElementsByName("id_usuario")[0].value == "")) {
-				alert('Motorista não preenchido!');
-				return false;
-			}
-			if ((document.getElementsByName("id_area")[0].value == null ||
-				document.getElementsByName("id_area")[0].value == "")) {
-				alert('Area não preenchida!');
-				return false;
-			} else {
-				document.myform1.action = "{{ .Host }}/CadastroCobertura";
-			}
-	     } else if (document.pressed == 'Localizar') {
-			document.myform1.action = "cadastro_cobertura.jsp";
-	     } else if (document.pressed == 'Eliminar') {
-			selecionado = false;
-			for (var i = 0; i < document.getElementsByName("id").length; i++) {
-				if (document.getElementsByName("id")[i].checked) {
-					selecionado = true;
+				document.addEventListener('readystatechange', event => {
+  					switch (document.readyState) {
+    					case "loading":
+      						break;
+    					case "interactive":
+      						break;
+    					case "complete":
+							if (document.getElementsByName("reload")[0].value == 0) {
+								document.pressed = "Localizar";
+								for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+									if (document.getElementsByName("operation")[i].value == "Localizar") {
+										document.getElementsByName("operation")[i].enable = true;
+										document.getElementsByName("operation")[i].click();
+									}
+								}
+							}
+      						break;
+  						}
+				});
+				function handleclickDescricao() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+					document.getElementsByName("id_usuario")[0].value = "";
+					document.getElementsByName("id_area")[0].value = "";
 				}
-			}
-			if (!selecionado) {
-				alert('Registro não selecionado para ser eliminado!');
-				return false;
-			} else {
-			  	document.myform2.action = "{{ .Host }}/CadastroCobertura";
-			}
-	     } else if (document.pressed == 'Alterar') {
-			selecionado = false;
-			if ((document.getElementsByName("id_usuario")[0].value == null ||
-				document.getElementsByName("id_usuario")[0].value == "")) {
-				selecionado = true;
-			}
-			if ((document.getElementsByName("id_area")[0].value == null ||
-				document.getElementsByName("id_area")[0].value == "")) {
-				selecionado = true;
-			}
-			if (!selecionado) {
-				alert('Area e ou Motorista não preenchidos!');
-				return false;
-			} else {
-				selecionado = false;
-				for (var i = 0; i < document.getElementsByName("id").length; i++) {
-					if (document.getElementsByName("id")[i].checked) {
-						selecionado = true;
+				function handleChangeRadio() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("id_usuario")[0].value = document.getElementsByName("id_usuario_hidden")[i].value;
+							document.getElementsByName("id_area")[0].value = document.getElementsByName("id_area_hidden")[i].value;
+						}
 					}
 				}
-				if (!selecionado) {
-					alert('Registro não selecionado para ser alterado!');
-					return false;
-				} else {
-					if (!((document.getElementsByName("id_area")[0].value == null ||
-						document.getElementsByName("id_area")[0].value == ""))) {
-							document.getElementsByName("id_area_myform1")[0].value = 
-								document.getElementsByName("id_area")[0].value;
+				function handleChangeCheckBox() {
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("name_radio")[i].checked = false;
+						}
 					}
-					if (!((document.getElementsByName("id_usuario")[0].value == null ||
-						document.getElementsByName("id_usuario")[0].value == ""))) {
-							document.getElementsByName("id_usuario_myform1")[0].value = 
-								document.getElementsByName("id_usuario")[0].value;
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
 					}
-					document.myform2.action = "{{ .Host }}/CadastroCobertura";
+					document.getElementsByName("id_usuario")[0].value = "";
+					document.getElementsByName("id_area")[0].value = "";
 				}
-			}
-	     }
-	     return true;
-	}
-	</script>
+				function onsubmitform() {
+					if (document.pressed == 'Inserir') {
+						if (document.getElementsByName("nome")[0].value == null
+								|| document.getElementsByName("nome")[0].value == "") {
+							alert('Descricao não preenchida!');
+							return false;
+						} else {
+							if (confirm("Confirma Inserção!") == true) {
+								document.myform1.action = "{{ .Host }}/CadastroCobertura";
+							} else {
+								return false;
+							}
+						}
+					} else if (document.pressed == 'Localizar') {
+						document.myform1.action = "{{ .Host }}/CadastroCobertura";
+					} else if (document.pressed == 'Eliminar') {
+						var selecionado = false;
+						for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+							if (document.getElementsByName("name_checkbox")[i].checked) {
+								selecionado = true;
+							}
+						}
+						for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+							if (document.getElementsByName("name_radio")[i].checked) {
+								selecionado = true;
+							}
+						}
+						if (!selecionado) {
+							alert('Nenhum registro selecionado para ser eliminado!');
+							return false;
+						} else {
+							if (confirm("Confirma Exclusão!") == true) {
+								document.myform1.action = "{{ .Host }}/CadastroCobertura";
+							} else {
+								return false;
+							}
+						}
+					} else if (document.pressed == 'Alterar') {
+						if (document.getElementsByName("id_usuario")[0].value == null
+								|| document.getElementsByName("id_area")[0].value == "") {
+							alert('Usuario e ou area não preenchido(s)!');
+							return false;
+						} else {
+							var selecionado = false;
+							for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+								if (document.getElementsByName("name_radio")[i].checked) {
+									selecionado = true;
+								}
+							}
+							if (!selecionado) {
+								alert('Registro não selecionado para ser alterado!');
+								return false;
+							} else {
+								if (confirm("Confirma Alteração!") == true) {
+									document.myform1.action = "{{ .Host }}/CadastroCobertura";
+								} else {
+									return false;
+								}
+							}
+						}
+					}
+					return true;
+				}
+			</script>
+
 			<div id="content_top"></div>
 			<div id="content_main">
 				<form name="myform1" onsubmit="return onsubmitform();">
-					<br>
-						<h1>
-						Motorista&nbsp;:&nbsp;<input type="text" name="motorista">
-						<h1>
-								Area&nbsp;:&nbsp;<input type="text" name="area">
+					<h1>
+						Motorista&nbsp;:&nbsp;<select name="id_usuario">
+							<option value=""></option>
+							{{range $key1, $value1 := .Usuario }}
+								{{if $value1}}
+									{{range $key2, $value2 := .}}
+										{{if $key2}}
+											{{if $value2}}
+												{{if eq $key2 1}}
+													<option value="{{$value2}}">
+												{{end}}
+												{{if eq $key2 2}}
+													{{$value2}}</option>
+												{{end}}
+											{{end}}
+										{{end}}
+									{{end}}
+								{{end}}
+							{{end}}
+						</select>
+					</h1>
+					<h1>
+						Area&nbsp;:&nbsp;<select name="id_area">
+							<option value=""></option>
+							{{range $key1, $value1 := .Area }}
+								{{if $value1}}
+									{{range $key2, $value2 := .}}
+										{{if $key2}}
+											{{if $value2}}
+												{{if eq $key2 1}}
+													<option value="{{$value2}}">
+												{{end}}
+												{{if eq $key2 2}}
+													{{$value2}}</option>
+												{{end}}
+											{{end}}
+										{{end}}
+									{{end}}
+								{{end}}
+							{{end}}
+						</select>
+					</h1>
+						<br>
+						<table border="1" align="left">
+							<tr>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Inserir">
+									</h1>
+								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Localizar">
+									</h1>
+								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Eliminar" disabled>
+									</h1>
+								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Alterar" disabled>
+									</h1>
+								</td>
+							</tr>
+						</table> <br><br><br>
 			</div>
+			<div id="Colunas">
+				  	<h1>
+				 	<table>
+					{{range $key1, $value1 := .TabelaDados }}
+						{{if $value1}}
+							<!--<tr>-->
+							{{range $key2, $value2 := .}}
+							 	{{if $key2}}
+								 	{{if $value2}}
+										{{if eq $key2 1}}
+											<!-- <td>{{$value2}}</td> disabled show id-->
+										{{end}}
+										{{if eq $key2 2}}
+										{{end}}
+										{{if eq $key2 3}}
+										{{end}}
+										{{if eq $key2 4}}
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 5}}
+										{{end}}
+										{{if eq $key2 6}}
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 7}}
+											<!-- <td>{{$value2}}</td> disable show ts -->
+											</tr>
+										{{end}}
+									{{end}}
+								{{else}}
+								 	{{if $value2}}
+										<tr><td><input type="radio" id="id_radio" name="name_radio" value="{{$value2}}" onchange="handleChangeRadio();"></td>
+										<td><input type="checkbox" id="id_checkbox" name="name_checkbox" value="{{$value2}}" onchange="handleChangeCheckBox();"></td>
+									{{end}}
+								{{end}}
+							{{end}}
+						 	<!--</tr>-->
+						 {{end}}
+					{{end}}
+				</table>
+					</h1>
+			</div>
+				</form>
+				{{range $key1, $value1 := .TabelaDados }}
+				{{if $value1}}
+					<!--<tr>-->
+					{{range $key2, $value2 := .}}
+						 {{if $key2}}
+							 {{if $value2}}
+								{{if eq $key2 1}}
+								{{end}}
+								{{if eq $key2 2}}
+								<input type="hidden" name="id_usuario_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 3}}
+								<input type="hidden" name="login_motorista_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 4}}
+								<input type="hidden" name="nome_motorista_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 5}}
+								<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 6}}
+								<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 7}}
+								{{end}}
+							{{end}}
+						{{end}}
+					{{end}}
+					 <!--</tr>-->
+				 {{end}}
+			{{end}}
 			<div id="content_bottom"></div>
 		</div>
 	</div>
