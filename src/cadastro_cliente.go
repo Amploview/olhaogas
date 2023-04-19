@@ -97,6 +97,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		d.TabelaDados[row][13] = ts
 		row++
 		if row >= sizeRows {
+			rows.Close()
 			break
 		}
 	}
@@ -105,7 +106,6 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		println(err)
 	}
 	defer rows.Close()
-	rows.Close()
 	var Tot_elementos = row
 	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string

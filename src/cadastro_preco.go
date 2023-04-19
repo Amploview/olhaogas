@@ -84,13 +84,16 @@ func cadastro_preco(w http.ResponseWriter, r *http.Request, html string, d *data
 		d.TabelaDados[row][6] = descricao_area
 		d.TabelaDados[row][7] = ts
 		row++
+		if row >= sizeRows {
+			rows.Close()
+			break
+		}
 	}
 	err = rows.Err()
 	if err != nil {
 		println(err)
 	}
 	defer rows.Close()
-	//rows.Close()
 	var Tot_elementos = row
 	for row := 0; int(row) < int(Tot_elementos); row++ {
 		var id string
