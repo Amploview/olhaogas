@@ -3,19 +3,24 @@ package main
 import "database/sql"
 
 const sizeCols = 15
-const sizeRows = 30
+const sizeRows = 15
 
 type data struct {
-	Title       string
-	Header      string
-	Host        string
-	db          *sql.DB
-	TabelaDados [sizeRows][sizeCols]string //comportar rownum e colunas das tabelas do sistema
-	Reload      int
-	Area        [sizeRows][3]string //comportar rownum, id, descricao
-	Glp         [sizeRows][3]string //comportar rownum, id, descricao
-	Cliente     [sizeRows][5]string //comportar rownum, id, nome, telefone, email
-	Usuario     [sizeRows][5]string //comportar rownum, id, login, nome, tipo_usuario
+	Title            string
+	Header           string
+	Host             string
+	db               *sql.DB
+	TabelaDados      [sizeRows][sizeCols]string //comportar rownum e colunas das tabelas do sistema
+	Reload           int
+	Area             [sizeRows][3]string //comportar rownum, id, descricao
+	Glp              [sizeRows][3]string //comportar rownum, id, descricao
+	Cliente          [sizeRows][5]string //comportar rownum, id, nome, telefone, email
+	Usuario          [sizeRows][5]string //comportar rownum, id, login, nome, tipo_usuario
+	Flg_Tipo_Usuario [4][3]string        //comportar rownum, id, descricao :: Tabela criada hardcoded
+	//Administrador
+	//Light (Deposito e Motorista)
+	//Deposito
+	//Motorista
 }
 
 func contains(slice []string, item string) bool {

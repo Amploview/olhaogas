@@ -298,12 +298,14 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 ) ;
 
 INSERT INTO `usuario` (`login`, `senha`, `nome`, `flg_tipo_usuario`, `ts`) VALUES
-('bidu', 'teste123', 'Bidu', 2, '2018-01-11 11:50:39'),
-('lima', 'teste123', 'Lima', 2, '2018-01-11 11:50:45'),
-('bruno', 'teste123', 'Bruno', 3, '2017-10-06 01:15:24'),
-('wilian', 'teste123', 'Wilian', 3, '2017-10-06 01:15:52'),
-('paulo', 'teste123', 'Paulo', 3, '2017-10-06 01:16:34'),
-('victor', 'teste123', 'Victor', 3, '2017-10-06 01:17:13');
+('evandro', 'teste123', 'Evandro', 0, '2018-01-11 11:50:39'), --usuario Adm
+('eduardo', 'teste123', 'Eduardo', 1, '2018-01-11 11:50:39'), --usuario light Deposito/Motorista
+('bidu', 'teste123', 'Bidu', 2, '2018-01-11 11:50:39'), --usuario Deposito
+('lima', 'teste123', 'Lima', 2, '2018-01-11 11:50:45'), --usuario Deposito
+('bruno', 'teste123', 'Bruno', 3, '2017-10-06 01:15:24'), --usuario Motorista
+('wilian', 'teste123', 'Wilian', 3, '2017-10-06 01:15:52'), --usuario Motorista
+('paulo', 'teste123', 'Paulo', 3, '2017-10-06 01:16:34'), --usuario Motorista
+('victor', 'teste123', 'Victor', 3, '2017-10-06 01:17:13'); --usuario Motorista
 
 CREATE INDEX IF NOT EXISTS idx_area_key_descricao ON area(descricao);
 

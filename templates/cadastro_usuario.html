@@ -20,78 +20,174 @@
 				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
 			</ul>
 		</div>
-
 		<div id="content">
-
 			<script type="text/javascript">
+				document.addEventListener('readystatechange', event => {
+  					switch (document.readyState) {
+    					case "loading":
+      						break;
+    					case "interactive":
+      						break;
+    					case "complete":
+							if (document.getElementsByName("reload")[0].value == 0) {
+								document.pressed = "Localizar";
+								for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+									if (document.getElementsByName("operation")[i].value == "Localizar") {
+										document.getElementsByName("operation")[i].enable = true;
+										document.getElementsByName("operation")[i].click();
+									}
+								}
+							}
+      						break;
+  						}
+				});
+				function handleclickDescricao() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+					document.getElementsByName("nome")[0].value = "";
+					document.getElementsByName("endereco")[0].value = "";
+					document.getElementsByName("cep")[0].value = "";
+					document.getElementsByName("id_area")[0].value = "";
+					document.getElementsByName("ponto_de_referencia")[0].value = "";
+					document.getElementsByName("ddd")[0].value = "";
+					document.getElementsByName("telefone")[0].value = "";
+					document.getElementsByName("email")[0].value = "";
+					document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
+					document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
+				}
+				function handleChangeRadio() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("nome")[0].value = document.getElementsByName("nome_hidden")[i].value;
+							document.getElementsByName("endereco")[0].value = document.getElementsByName("endereco_hidden")[i].value;
+							document.getElementsByName("cep")[0].value = document.getElementsByName("cep_hidden")[i].value;
+							document.getElementsByName("id_area")[0].value = document.getElementsByName("id_area_hidden")[i].value;
+							document.getElementsByName("ponto_de_referencia")[0].value = document.getElementsByName("ponto_de_referencia_hidden")[i].value;
+							document.getElementsByName("ddd")[0].value = document.getElementsByName("ddd_hidden")[i].value;
+							document.getElementsByName("telefone")[0].value = document.getElementsByName("telefone_hidden")[i].value;
+							document.getElementsByName("email")[0].value = document.getElementsByName("email_hidden")[i].value;
+							document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
+							document.getElementsByName("flg_aviso_gas_final")[1].checked = true;
+							if (document.getElementsByName("flg_aviso_gas_final_hidden")[i].value == "1") {
+								document.getElementsByName("flg_aviso_gas_final")[0].checked = true;
+								document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
+							}
+						}
+					}
+				}
+				function handleChangeCheckBox() {
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("name_radio")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+					}
+					document.getElementsByName("nome")[0].value = "";
+					document.getElementsByName("endereco")[0].value = "";
+					document.getElementsByName("cep")[0].value = "";
+					document.getElementsByName("id_area")[0].value = "";
+					document.getElementsByName("ponto_de_referencia")[0].value = "";
+					document.getElementsByName("ddd")[0].value = "";
+					document.getElementsByName("telefone")[0].value = "";
+					document.getElementsByName("email")[0].value = "";
+					document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
+					document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
+				}
 				function onsubmitform() {
-					var selecionado;
 					if (document.pressed == 'Inserir') {
-						if ((document.getElementsByName("login")[0].value == null || 
-							document.getElementsByName("login")[0].value == "")) {
-								alert('Login não preenchido!');
-								return false;
-						}
-						if ((document.getElementsByName("nome")[0].value == null || 
-							document.getElementsByName("nome")[0].value == "")) {
-								alert('Nome não preenchido!');
-								return false;
-						}
-						if ((document.getElementsByName("flg_tipo_usuario")[0].value == null || 
-							document.getElementsByName("flg_tipo_usuario")[0].value == "")) {
-							alert('Tipo não preenchido!');
+						if (document.getElementsByName("nome")[0].value == null
+								|| document.getElementsByName("nome")[0].value == "") {
+							alert('Descricao não preenchida!');
 							return false;
-						}
-						if ((document.getElementsByName("senha")[0].value == null || 
-							document.getElementsByName("senha")[0].value == "")) {
-								alert('Senha não preenchida!');
+						} else {
+							if (confirm("Confirma Inserção!") == true) {
+								document.myform1.action = "{{ .Host }}/CadastroUsuario";
+							} else {
 								return false;
+							}
 						}
-						document.myform1.action = "{{ .Host }}/CadastroUsuario";
 					} else if (document.pressed == 'Localizar') {
 						document.myform1.action = "{{ .Host }}/CadastroUsuario";
 					} else if (document.pressed == 'Eliminar') {
 						var selecionado = false;
-						for (var i = 0; i < document.getElementsByName("id").length; i++) {
-							if (document.getElementsByName("id")[i].checked) {
+						for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+							if (document.getElementsByName("name_checkbox")[i].checked) {
+								selecionado = true;
+							}
+						}
+						for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+							if (document.getElementsByName("name_radio")[i].checked) {
 								selecionado = true;
 							}
 						}
 						if (!selecionado) {
-							alert('Registro não selecionado para ser eliminado!');
+							alert('Nenhum registro selecionado para ser eliminado!');
 							return false;
 						} else {
-							document.myform2.action = "{{ .Host }}/CadastroUsuario";
+							if (confirm("Confirma Exclusão!") == true) {
+								document.myform1.action = "{{ .Host }}/CadastroUsuario";
+							} else {
+								return false;
+							}
 						}
 					} else if (document.pressed == 'Alterar') {
-						var dados_nao_informados = true;
-						if (document.getElementsByName("login")[0].value != null) {
-							if (document.getElementsByName("login")[0].value != "") {
-								dados_nao_informados = false;
-							}
-						}
-						if (document.getElementsByName("nome")[0].value != null) {
-							if (document.getElementsByName("nome")[0].value != "") {
-								dados_nao_informados = false;
-							}
-						}
-						if (document.getElementsByName("flg_tipo_usuario")[0].value != null) {
-							if (document.getElementsByName("flg_tipo_usuario")[0].value != "") {
-								dados_nao_informados = false;
-							}
-						}
-						if (document.getElementsByName("senha")[0].value != null) {
-							if (document.getElementsByName("senha")[0].value != "") {
-								dados_nao_informados = false;
-							}
-						}
-						if (dados_nao_informados) {
-							alert('Login, nome, tipo e ou senha não preenchidos!');
+						if (document.getElementsByName("nome")[0].value == null
+								|| document.getElementsByName("nome")[0].value == "") {
+							alert('Descricao não preenchida!');
 							return false;
 						} else {
 							var selecionado = false;
-							for (var i = 0; i < document.getElementsByName("id").length; i++) {
-								if (document.getElementsByName("id")[i].checked) {
+							for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+								if (document.getElementsByName("name_radio")[i].checked) {
 									selecionado = true;
 								}
 							}
@@ -99,31 +195,28 @@
 								alert('Registro não selecionado para ser alterado!');
 								return false;
 							} else {
-								if (!(document.getElementsByName("login")[0].value == null ||
-										document.getElementsByName("login")[0].value == "")) {
-									document.getElementsByName("login_myform1")[0].value = 
-									document.getElementsByName("login")[0].value;
+								if (confirm("Confirma Alteração!") == true) {
+									document.myform1.action = "{{ .Host }}/CadastroUsuario";
+								} else {
+									return false;
 								}
-								if (!(document.getElementsByName("nome")[0].value == null || 
-										document.getElementsByName("nome")[0].value == "")) {
-									document.getElementsByName("nome_myform1")[0].value = 
-										document.getElementsByName("nome")[0].value;
-								}
-								if (!((document.getElementsByName("flg_tipo_usuario")[0].value == null ||
-									document.getElementsByName("flg_tipo_usuario")[0].value == ""))) {
-										document.getElementsByName("flg_tipo_usuario_myform1")[0].value = 
-											document.getElementsByName("flg_tipo_usuario")[0].value;
-								}
-								if (!(document.getElementsByName("senha")[0].value == null || 
-										document.getElementsByName("senha")[0].value == "")) {
-									document.getElementsByName("senha_myform1")[0].value = 
-									document.getElementsByName("senha")[0].value;
-								}
-								document.myform2.action = "{{ .Host }}/CadastroUsuario";
 							}
 						}
 					}
 					return true;
+				}
+				function copyToClipboard(text) {
+					var selecionado = false;
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							selecionado = true;
+						  	window.prompt('Click Ctrl+C', document.getElementsByName("url_hidden")[i].value);
+						}
+					}
+					if (!selecionado) {
+						alert('Registro não selecionado para copiar URL!');
+						return false;
+					}
 				}
 			</script>
 
@@ -131,20 +224,36 @@
 			<div id="content_main">
 				<form name="myform1" onsubmit="return onsubmitform();">
 					<h1>
-						Login&nbsp;:&nbsp;<input type="text" name="login">
+						Login&nbsp;:&nbsp;<input type="text" name="login" onClick="handleclickDescricao()">
 					</h1>
 					<h1>
-						Nome&nbsp;:&nbsp;<input type="text" name="nome">
+						Senha&nbsp;:&nbsp;<input type="text" name="senha" onClick="handleclickDescricao()">
 					</h1>
 					<h1>
-						Tipo Usuario&nbsp;:&nbsp;<select name="flg_tipo_usuario"><option value=""></option><option value="2">Deposito</option><option value="3">Motorista</option></select>
+						Nome&nbsp;:&nbsp;<input type="text" name="nome" onClick="handleclickDescricao()">
 					</h1>
 					<h1>
-						Senha&nbsp;:&nbsp;<input type="password" name="senha"
-							pattern=".{6,}"
-							title="Senha tem ter minimo 6 ou mais characteres">
+						Tipo Usuario&nbsp;:&nbsp;<select name="flg_tipo_usuario">
+							<option value=""></option>
+							{{range $key1, $value1 := .Flg_Tipo_Usuario }}
+								{{if $value1}}
+									{{range $key2, $value2 := .}}
+										{{if $key2}}
+											{{if $value2}}
+												{{if eq $key2 1}}
+													<option value="{{$value2}}">
+												{{end}}
+												{{if eq $key2 2}}
+													{{$value2}}</option>
+												{{end}}
+											{{end}}
+										{{end}}
+									{{end}}
+								{{end}}
+							{{end}}
+						</select>
 					</h1>
-					<br>
+						<br>
 						<table border="1" align="left">
 							<tr>
 								<td>
@@ -159,12 +268,102 @@
 											onclick="document.pressed=this.value" value="Localizar">
 									</h1>
 								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Eliminar" disabled>
+									</h1>
+								</td>
+								<td>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Alterar" disabled>
+									</h1>
+								</td>
+								<td>
+					<button id="demo" onclick="copyToClipboard(document.getElementById('demo').innerHTML)">Copiar URL</button>
+								</td>
 							</tr>
 						</table> <br><br><br>
-				</form>
 			</div>
+			<div id="Colunas">
+				  	<h1>
+				 	<table>
+					{{range $key1, $value1 := .TabelaDados }}
+						{{if $value1}}
+							<!--<tr>-->
+							{{range $key2, $value2 := .}}
+							 	{{if $key2}}
+								 	{{if $value2}}
+										{{if eq $key2 1}}
+										<!-- <td>{{$value2}}</td> disabled show id -->
+										{{end}}
+										{{if eq $key2 2}}
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 3}}
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 4}}
+										{{end}}
+										{{if eq $key2 5}}
+										{{end}}
+										{{if eq $key2 6}}
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 7}}
+											<!-- <td>{{$value2}}</td> disable show ts -->
+											</tr>
+										{{end}}
+									{{end}}
+								{{else}}
+								 	{{if $value2}}
+										<tr><td><input type="radio" id="id_radio" name="name_radio" value="{{$value2}}" onchange="handleChangeRadio();"></td>
+										<td><input type="checkbox" id="id_checkbox" name="name_checkbox" value="{{$value2}}" onchange="handleChangeCheckBox();"></td>
+									{{end}}
+								{{end}}
+							{{end}}
+						 	<!--</tr>-->
+						 {{end}}
+					{{end}}
+				</table>
+					</h1>
+			</div>
+				</form>
+				{{range $key1, $value1 := .TabelaDados }}
+				{{if $value1}}
+					<!--<tr>-->
+					{{range $key2, $value2 := .}}
+						 {{if $key2}}
+							 {{if $value2}}
+								{{if eq $key2 1}}
+								<input type="hidden" name="url_hidden" value="//www.olhaogas.com.br/CadastoPedido?id={{$value2}}"> 
+								{{end}}
+								{{if eq $key2 2}}
+								<input type="hidden" name="nome_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 3}}
+								<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 4}}
+								<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 5}}
+								<input type="hidden" name="cep_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 6}}
+								<input type="hidden" name="endereco_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 7}}
+								<input type="hidden" name="ponto_de_referencia_hidden" value="{{$value2}}"> 
+								{{end}}
+							{{end}}
+						{{end}}
+					{{end}}
+					 <!--</tr>-->
+				 {{end}}
+			{{end}}
 			<div id="content_bottom"></div>
-
 		</div>
 	</div>
 </body>
