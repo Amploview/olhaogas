@@ -15,6 +15,8 @@
 		<div id="menu">
 			<ul>
 				<li class="menuitem"><a href="{{ .Host }}/"><h1>::</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroArea"><h1>Area</h1></a></li>
+				<li class="menuitem"><a href="{{ .Host }}/CadastroUsuario"><h1>Usuario</h1></a></li>
 				<li class="menuitem"><a href="{{ .Host }}/Cadastros"><h1>Cadastros</h1></a></li>
 				<li class="menuitem"><a href="{{ .Host }}/Relatorios"><h1>Relatórios</h1></a></li>
 				<li class="menuitem"><a href="{{ .Host }}/Sobre"><h1>??</h1></a></li>
@@ -183,9 +185,9 @@
 			<div id="content_main">
 				<form name="myform1" onsubmit="return onsubmitform();">
 					<h1>
-						Motorista&nbsp;:&nbsp;<select name="id_usuario">
+						Area&nbsp;:&nbsp;<select name="id_area">
 							<option value=""></option>
-							{{range $key1, $value1 := .Usuario }}
+							{{range $key1, $value1 := .Area }}
 								{{if $value1}}
 									{{range $key2, $value2 := .}}
 										{{if $key2}}
@@ -204,9 +206,9 @@
 						</select>
 					</h1>
 					<h1>
-						Area&nbsp;:&nbsp;<select name="id_area">
+						Motorista&nbsp;:&nbsp;<select name="id_usuario">
 							<option value=""></option>
-							{{range $key1, $value1 := .Area }}
+							{{range $key1, $value1 := .Usuario }}
 								{{if $value1}}
 									{{range $key2, $value2 := .}}
 										{{if $key2}}

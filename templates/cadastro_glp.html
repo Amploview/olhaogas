@@ -64,6 +64,7 @@
 					document.getElementsByName("descricao")[0].value = "";
 					document.getElementsByName("glp_default")[0].checked = false;
 					document.getElementsByName("glp_default")[1].checked = false;
+					document.getElementsByName("preco")[0].value = "";
 				}
 				function handleChangeRadio() {
 					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
@@ -94,6 +95,7 @@
 								document.getElementsByName("glp_default")[0].checked = true;
 								document.getElementsByName("glp_default")[1].checked = false;
 							}
+							document.getElementsByName("preco")[0].value = document.getElementsByName("preco_hidden")[i].value;
 						}
 					}
 				}
@@ -120,6 +122,7 @@
 					document.getElementsByName("descricao")[0].value = "";
 					document.getElementsByName("glp_default")[0].checked = false;
 					document.getElementsByName("glp_default")[1].checked = false;
+					document.getElementsByName("preco")[0].value = "";
 				}
 				function onsubmitform() {
 					if (document.pressed == 'Inserir') {
@@ -141,6 +144,10 @@
 						if (document.getElementsByName("descricao")[0].value == null
 								|| document.getElementsByName("descricao")[0].value == "") {
 							alert('Descricao não preenchida!');
+							return false;
+						} else if (document.getElementsByName("preco")[0].value == null
+								|| document.getElementsByName("preco")[0].value == "") {
+							alert('Preço não preenchido!');
 							return false;
 						} else {
 							if (confirm("Confirma Inserção!") == true) {
@@ -204,6 +211,10 @@
 								|| document.getElementsByName("descricao")[0].value == "") {
 							alert('Descricao não preenchida!');
 							return false;
+						} else if (document.getElementsByName("preco")[0].value == null
+								|| document.getElementsByName("preco")[0].value == "") {
+							alert('Preço não preenchido!');
+							return false;
 						} else {
 							var selecionado = false;
 							for (var i = 0; i < document.getElementsByName("name_radio").length; i++) 
@@ -238,6 +249,9 @@
 						Default&nbsp;:&nbsp;<input type="radio" name="glp_default"
 							value="1">Sim</input>&nbsp;<input type="radio" name="glp_default"
 							value="0">não</input>
+					</h1>
+					<h1>
+						Preço padrão&nbsp;:&nbsp;<input type="number" name="preco"  min="0.01" step="0.01" max="2500" value="">
 					</h1>
 					<br>
 						<table border="1" align="left">
@@ -292,6 +306,8 @@
 											</td>
 										{{end}}
 										{{if eq $key2 4}}
+										{{end}}
+										{{if eq $key2 5}}
 											<!-- <td>{{$value2}}</td> disable show ts --> 
 											</tr>
 										{{end}}
@@ -327,6 +343,9 @@
 									{{end}}
 								{{end}}
 								{{if eq $key2 4}}
+								<input type="hidden" name="preco_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 5}}
 								{{end}}
 							{{end}}
 						{{end}}
