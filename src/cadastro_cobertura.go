@@ -43,7 +43,7 @@ func cadastro_cobertura(w http.ResponseWriter, r *http.Request, html string, d *
 			where += "id_area = " + r.Form.Get("id_area")
 		}
 	}
-	cmd = "select * from (select row_number() over (order by cobertura.id) rownum, cobertura.id as id, id_usuario, usuario.login as login_motorista, usuario.nome as nome_motorista, id_area, area.descricao as descricao_area, cobertura.ts as ts from cobertura, usuario, area where cobertura.id_area = area.id and cobertura.id_usuario = usuario.id and usuario.flg_tipo_usuario = 3 order by cobertura.id) " + where
+	cmd = "select * from (select row_number() over (order by cobertura.id) rownum, cobertura.id as id, id_usuario, usuario.login as login_motorista, usuario.nome as nome_motorista, id_area, area.descricao as descricao_area, cobertura.ts as ts from cobertura, usuario, area where cobertura.id_area = area.id and cobertura.id_usuario = usuario.id and usuario.flg_tipo_usuario = 3 order by cobertura.id) " + where + " order by rownum desc"
 	rows, err := d.db.Query(cmd)
 	println(cmd)
 	if err != nil {

@@ -69,7 +69,7 @@ func cadastro_usuario(w http.ResponseWriter, r *http.Request, html string, d *da
 		}
 
 	}
-	cmd = "select * from (select row_number() over (order by usuario.id) rownum, usuario.id as id, login, nome, senha, flg_tipo_usuario, txt_flg_tipo_usuario.descricao as descricao_flg_tipo_usuario, usuario.ts as ts from usuario, (SELECT 0 as id, 'Administrador' as descricao union SELECT 1 as id, 'Light (Deposito e Motorista)' as descricao union SELECT 2 as id, 'Deposito' as descricao union SELECT 3 as id, 'Motorista' as descricao) txt_flg_tipo_usuario where usuario.flg_tipo_usuario = txt_flg_tipo_usuario.id order by usuario.id) " + where
+	cmd = "select * from (select row_number() over (order by usuario.id) rownum, usuario.id as id, login, nome, senha, flg_tipo_usuario, txt_flg_tipo_usuario.descricao as descricao_flg_tipo_usuario, usuario.ts as ts from usuario, (SELECT 0 as id, 'Administrador' as descricao union SELECT 1 as id, 'Light (Deposito e Motorista)' as descricao union SELECT 2 as id, 'Deposito' as descricao union SELECT 3 as id, 'Motorista' as descricao) txt_flg_tipo_usuario where usuario.flg_tipo_usuario = txt_flg_tipo_usuario.id order by usuario.id) " + where + " order by rownum desc"
 	rows, err := d.db.Query(cmd)
 	println(cmd)
 	if err != nil {
@@ -129,12 +129,13 @@ func cadastro_usuario(w http.ResponseWriter, r *http.Request, html string, d *da
 			if r.Form.Get("operation") == "Alterar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
 				println(d.TabelaDados[row][1] + " esta sendo alterado de " + d.TabelaDados[row][2] + "/" +
-					d.TabelaDados[row][2] + "/" +
+					d.TabelaDados[row][3] + "/" +
 					d.TabelaDados[row][4] + "/" +
 					d.TabelaDados[row][5] + "/" +
 					d.TabelaDados[row][6] +
 					" para " +
 					login + "/" +
+					senha + "/" +
 					nome + "/" +
 					flg_tipo_usuario + "/" +
 					descricao_flg_tipo_usuario + "!")
@@ -150,9 +151,9 @@ func cadastro_usuario(w http.ResponseWriter, r *http.Request, html string, d *da
 				}
 				d.TabelaDados[row][2] = login
 				d.TabelaDados[row][3] = senha
-				d.TabelaDados[row][5] = nome
-				d.TabelaDados[row][6] = flg_tipo_usuario
-				d.TabelaDados[row][7] = descricao_flg_tipo_usuario
+				d.TabelaDados[row][4] = nome
+				d.TabelaDados[row][5] = flg_tipo_usuario
+				d.TabelaDados[row][6] = descricao_flg_tipo_usuario
 				row_sav = row
 			} else if r.Form.Get("operation") == "Eliminar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")

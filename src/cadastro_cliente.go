@@ -20,7 +20,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		}
 	}
 	if r.Form.Get("operation") == "Inserir" {
-		cmd = "insert into Cliente(nome) values ('" + r.Form.Get("nome") + "')"
+		cmd = "insert into Cliente(nome, id_area, cep, endereco, ponto_de_referencia, ddi, ddd, telefone, email, flg_aviso_gas_final, key_id) values ('" + r.Form.Get("nome") + "', " + r.Form.Get("id_area") + ", " + r.Form.Get("cep") + ", '" + r.Form.Get("endereco") + "', '" + r.Form.Get("ponto_de_referencia") + "', " + r.Form.Get("ddi") + ", " + r.Form.Get("ddd") + ", " + r.Form.Get("telefone") + ", '" + r.Form.Get("email") + "', " + r.Form.Get("flg_aviso_gas_final") + ", abs(random()%10000000))"
 		_, err := d.db.Exec(cmd)
 		println(cmd)
 		if err != nil {
@@ -52,7 +52,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		}
 
 	}
-	cmd = "select * from (select row_number() over (order by cliente.id) rownum, cliente.id as id, nome, id_area, area.descricao as descricao_area, cep, endereco, ponto_de_referencia, ddi, ddd, telefone, email, flg_aviso_gas_final, cliente.ts as ts from cliente, area where cliente.id_area = area.id order by cliente.id) " + where
+	cmd = "select * from (select row_number() over (order by cliente.id) rownum, cliente.id as id, nome, id_area, area.descricao as descricao_area, cep, endereco, ponto_de_referencia, ddi, ddd, telefone, email, flg_aviso_gas_final, cliente.ts as ts from cliente, area where cliente.id_area = area.id order by cliente.id) " + where + " order by rownum desc"
 	rows, err := d.db.Query(cmd)
 	println(cmd)
 	if err != nil {

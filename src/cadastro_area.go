@@ -35,7 +35,7 @@ func cadastro_area(w http.ResponseWriter, r *http.Request, html string, d *data)
 			where = " where descricao like '%" + r.Form.Get("descricao") + "%'"
 		}
 	}
-	cmd = "select * from (select row_number() over (order by id) rownum, id, descricao, ts from area order by id) " + where
+	cmd = "select * from (select row_number() over (order by id) rownum, id, descricao, ts from area order by id) " + where + " order by rownum desc"
 	rows, err := d.db.Query(cmd)
 	println(cmd)
 	if err != nil {

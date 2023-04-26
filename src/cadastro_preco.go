@@ -52,7 +52,7 @@ func cadastro_preco(w http.ResponseWriter, r *http.Request, html string, d *data
 			where += "id_area = " + r.Form.Get("id_area")
 		}
 	}
-	cmd = "select * from (select row_number() over (order by glp_preco_area.id) rownum, glp_preco_area.id as id, preco, id_glp, glp.descricao as descricao_glp, id_area, area.descricao as descricao_area, glp_preco_area.ts as ts from glp_preco_area, glp, area where glp_preco_area.id_glp = glp.id and glp_preco_area.id_area = area.id order by glp_preco_area.id) " + where
+	cmd = "select * from (select row_number() over (order by glp_preco_area.id) rownum, glp_preco_area.id as id, preco, id_glp, glp.descricao as descricao_glp, id_area, area.descricao as descricao_area, glp_preco_area.ts as ts from glp_preco_area, glp, area where glp_preco_area.id_glp = glp.id and glp_preco_area.id_area = area.id order by glp_preco_area.id) " + where + " order by rownum desc"
 	rows, err := d.db.Query(cmd)
 	println(cmd)
 	if err != nil {

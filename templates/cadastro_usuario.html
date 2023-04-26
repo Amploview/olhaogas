@@ -61,16 +61,10 @@
 							document.getElementsByName("operation")[i].disabled = false;
 						}
 					}
+					document.getElementsByName("login")[0].value = "";
+					document.getElementsByName("senha")[0].value = "";
 					document.getElementsByName("nome")[0].value = "";
-					document.getElementsByName("endereco")[0].value = "";
-					document.getElementsByName("cep")[0].value = "";
-					document.getElementsByName("id_area")[0].value = "";
-					document.getElementsByName("ponto_de_referencia")[0].value = "";
-					document.getElementsByName("ddd")[0].value = "";
-					document.getElementsByName("telefone")[0].value = "";
-					document.getElementsByName("email")[0].value = "";
-					document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
-					document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
+					document.getElementsByName("flg_tipo_usuario")[0].value = "";
 				}
 				function handleChangeRadio() {
 					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
@@ -94,20 +88,10 @@
 					}
 					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
 						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("login")[0].value = document.getElementsByName("login_hidden")[i].value;
+							document.getElementsByName("senha")[0].value = document.getElementsByName("senha_hidden")[i].value;
 							document.getElementsByName("nome")[0].value = document.getElementsByName("nome_hidden")[i].value;
-							document.getElementsByName("endereco")[0].value = document.getElementsByName("endereco_hidden")[i].value;
-							document.getElementsByName("cep")[0].value = document.getElementsByName("cep_hidden")[i].value;
-							document.getElementsByName("id_area")[0].value = document.getElementsByName("id_area_hidden")[i].value;
-							document.getElementsByName("ponto_de_referencia")[0].value = document.getElementsByName("ponto_de_referencia_hidden")[i].value;
-							document.getElementsByName("ddd")[0].value = document.getElementsByName("ddd_hidden")[i].value;
-							document.getElementsByName("telefone")[0].value = document.getElementsByName("telefone_hidden")[i].value;
-							document.getElementsByName("email")[0].value = document.getElementsByName("email_hidden")[i].value;
-							document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
-							document.getElementsByName("flg_aviso_gas_final")[1].checked = true;
-							if (document.getElementsByName("flg_aviso_gas_final_hidden")[i].value == "1") {
-								document.getElementsByName("flg_aviso_gas_final")[0].checked = true;
-								document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
-							}
+							document.getElementsByName("flg_tipo_usuario")[0].value = document.getElementsByName("flg_tipo_usuario_hidden")[i].value;
 						}
 					}
 				}
@@ -131,16 +115,10 @@
 							document.getElementsByName("operation")[i].disabled = true;
 						}
 					}
+					document.getElementsByName("login")[0].value = "";
+					document.getElementsByName("senha")[0].value = "";
 					document.getElementsByName("nome")[0].value = "";
-					document.getElementsByName("endereco")[0].value = "";
-					document.getElementsByName("cep")[0].value = "";
-					document.getElementsByName("id_area")[0].value = "";
-					document.getElementsByName("ponto_de_referencia")[0].value = "";
-					document.getElementsByName("ddd")[0].value = "";
-					document.getElementsByName("telefone")[0].value = "";
-					document.getElementsByName("email")[0].value = "";
-					document.getElementsByName("flg_aviso_gas_final")[0].checked = false;
-					document.getElementsByName("flg_aviso_gas_final")[1].checked = false;
+					document.getElementsByName("flg_tipo_usuario")[0].value = "";
 				}
 				function onsubmitform() {
 					if (document.pressed == 'Inserir') {
@@ -205,19 +183,6 @@
 					}
 					return true;
 				}
-				function copyToClipboard(text) {
-					var selecionado = false;
-					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
-						if (document.getElementsByName("name_radio")[i].checked) {
-							selecionado = true;
-						  	window.prompt('Click Ctrl+C', document.getElementsByName("url_hidden")[i].value);
-						}
-					}
-					if (!selecionado) {
-						alert('Registro não selecionado para copiar URL!');
-						return false;
-					}
-				}
 			</script>
 
 			<div id="content_top"></div>
@@ -280,9 +245,6 @@
 											onclick="document.pressed=this.value" value="Alterar" disabled>
 									</h1>
 								</td>
-								<td>
-					<button id="demo" onclick="copyToClipboard(document.getElementById('demo').innerHTML)">Copiar URL</button>
-								</td>
 							</tr>
 						</table> <br><br><br>
 			</div>
@@ -337,25 +299,18 @@
 						 {{if $key2}}
 							 {{if $value2}}
 								{{if eq $key2 1}}
-								<input type="hidden" name="url_hidden" value="//www.olhaogas.com.br/CadastoPedido?id={{$value2}}"> 
 								{{end}}
 								{{if eq $key2 2}}
-								<input type="hidden" name="nome_hidden" value="{{$value2}}"> 
+								<input type="hidden" name="login_hidden" value="{{$value2}}"> 
 								{{end}}
 								{{if eq $key2 3}}
-								<input type="hidden" name="id_area_hidden" value="{{$value2}}"> 
+								<input type="hidden" name="senha_hidden" value="{{$value2}}"> 
 								{{end}}
 								{{if eq $key2 4}}
-								<input type="hidden" name="descricao_area_hidden" value="{{$value2}}"> 
+								<input type="hidden" name="nome_hidden" value="{{$value2}}"> 
 								{{end}}
 								{{if eq $key2 5}}
-								<input type="hidden" name="cep_hidden" value="{{$value2}}"> 
-								{{end}}
-								{{if eq $key2 6}}
-								<input type="hidden" name="endereco_hidden" value="{{$value2}}"> 
-								{{end}}
-								{{if eq $key2 7}}
-								<input type="hidden" name="ponto_de_referencia_hidden" value="{{$value2}}"> 
+								<input type="hidden" name="flg_tipo_usuario_hidden" value="{{$value2}}"> 
 								{{end}}
 							{{end}}
 						{{end}}

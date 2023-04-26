@@ -22,210 +22,345 @@
 		</div>
 
 		<div id="content">
-
 			<script type="text/javascript">
-	function onsubmitform()
-	{
-	     var selecionado;
-	     var id_pedido_selecionado;
-	     if (document.pressed == 'Inserir') {
-			if ((document.getElementsByName("id_glp")[0].value == null ||  
-				document.getElementsByName("id_glp")[0].value == "")) {
-				alert('Glp não preenchido!');
-				return false;
-			}
-			if ((document.getElementsByName("quantidade")[0].value == null ||  
-				document.getElementsByName("quantidade")[0].value == "")) {
-				alert('quantidade não preenchida!');
-				return false;
-			}
-			if ((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||  
-				document.getElementsByName("flg_prioridade_pedido")[0].value == "")) {
-				alert('Prioridade não preenchida!');
-				return false;
-			}
-			if ((document.getElementsByName("flg_hora")[0].value == null ||  
-				document.getElementsByName("flg_hora")[0].value == "")) {
-				alert('horário não preenchido!');
-				return false;
-			}
-			document.myform1.action = "{{ .Host }}/CadastroPedido";
-	     } else if (document.pressed == 'Localizar') {
-			document.myform1.action = "{{ .Host }}/CadastroPedido";
-	     } else if (document.pressed == 'Eliminar') {
-			selecionado = false;
-			for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
-				if (document.getElementsByName("id_pedido")[i].checked) {
-					selecionado = true;
+					document.addEventListener('readystatechange', event => {
+  					switch (document.readyState) {
+    					case "loading":
+      						break;
+    					case "interactive":
+      						break;
+    					case "complete":
+							if (document.getElementsByName("reload")[0].value == 0) {
+								document.pressed = "Localizar";
+								for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+									if (document.getElementsByName("operation")[i].value == "Localizar") {
+										document.getElementsByName("operation")[i].enable = true;
+										document.getElementsByName("operation")[i].click();
+									}
+								}
+							}
+							url = location.search;
+							var parts = url.substring(1).split('&');
+							if (parts[0].substring(0).split('=')[0]=='id_cliente') {
+								alert('id_cliente == ' + parts[0].substring(0).split('=')[1]);
+							}
+							if (parts[1].substring(0).split('=')[0]=='key_id') {
+								alert('key_id == ' + parts[1].substring(0).split('=')[1]);
+							}
+      						break;
+  						}
+				});
+				function handleclickDescricao() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+					document.getElementsByName("descricao")[0].value = "";
 				}
-			}
-			if (!selecionado) {
-				alert('Registro não selecionado para ser eliminado!');
-				return false;
-			} else {
-			  	document.myform2.action = "{{ .Host }}/CadastroPedido";
-			}
-	     } else if (document.pressed == 'Confirmar') {
-				id_pedido_selecionado = null;
-				selecionado = false;
-				for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
-					if (document.getElementsByName("id_pedido")[i].checked) {
-						selecionado = true;
-						id_pedido_selecionado = i;
+				function handleChangeRadio() {
+					for (var i = 0; i < document.getElementsByName("name_checkbox").length; i++) {
+						if (document.getElementsByName("name_checkbox")[i].checked) {
+							document.getElementsByName("name_checkbox")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("descricao")[0].value = document.getElementsByName("descricao_hidden")[i].value;
+						}
 					}
 				}
-				if (id_pedido_selecionado != null) {
-					if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
-						if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
-							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "1" || document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
-								alert('Registro selecionado já foi confirmado e ou registrado problema!');
-								return false;
-							}
-							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
-								alert('Registro selecionado já foi cancelado, portanto não pode ser confirmado!');
-								return false;
+				function handleChangeCheckBox() {
+					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+						if (document.getElementsByName("name_radio")[i].checked) {
+							document.getElementsByName("name_radio")[i].checked = false;
+						}
+					}
+					for (var i = 0; i < document.getElementsByName("operation").length; i++) {
+						if (document.getElementsByName("operation")[i].value == "Inserir") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Localizar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Eliminar") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+					}
+					document.getElementsByName("descricao")[0].value = "";
+				}
+				function onsubmitform()
+				{
+	     			var selecionado;
+	     			var id_pedido_selecionado;
+	     			if (document.pressed == 'Inserir') {
+						if ((document.getElementsByName("id_glp")[0].value == null ||  
+							document.getElementsByName("id_glp")[0].value == "")) {
+							alert('Glp não preenchido!');
+							return false;
+						}
+						if ((document.getElementsByName("quantidade")[0].value == null ||  
+							document.getElementsByName("quantidade")[0].value == "")) {
+							alert('quantidade não preenchida!');
+							return false;
+						}
+						if ((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||  
+							document.getElementsByName("flg_prioridade_pedido")[0].value == "")) {
+							alert('Prioridade não preenchida!');
+							return false;
+						}
+						if ((document.getElementsByName("flg_hora")[0].value == null ||  
+							document.getElementsByName("flg_hora")[0].value == "")) {
+							alert('horário não preenchido!');
+							return false;
+						}
+						document.myform1.action = "{{ .Host }}/CadastroPedido";
+	     			} else if (document.pressed == 'Localizar') {
+						document.myform1.action = "{{ .Host }}/CadastroPedido";
+	     			} else if (document.pressed == 'Eliminar') {
+						selecionado = false;
+						for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+							if (document.getElementsByName("id_pedido")[i].checked) {
+								selecionado = true;
 							}
 						}
-					}	
-				}
-				if (!selecionado) {
-					alert('Registro não selecionado para ser confirmado!');
-					return false;
-				} else {
-				  	document.myform2.action = "{{ .Host }}/CadastroPedido";
-				}
-	     } else if (document.pressed == 'Cancelar') {
-				id_pedido_selecionado = null;
-				selecionado = false;
-				for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
-					if (document.getElementsByName("id_pedido")[i].checked) {
-						selecionado = true;
-						id_pedido_selecionado = i;
-					}
-				}
-				if (id_pedido_selecionado != null) {
-					if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
-						if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
-							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
-								alert('Registro selecionado já foi cancelado!');
-								return false;
+						if (!selecionado) {
+							alert('Registro não selecionado para ser eliminado!');
+							return false;
+						} else {
+			  				document.myform2.action = "{{ .Host }}/CadastroPedido";
+						}
+	     			} else if (document.pressed == 'Confirmar') {
+							id_pedido_selecionado = null;
+							selecionado = false;
+							for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+								if (document.getElementsByName("id_pedido")[i].checked) {
+									selecionado = true;
+									id_pedido_selecionado = i;
+								}
 							}
-							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "1" || document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
-								alert('Registro selecionado já foi confirmado e ou registrado problema, portanto não pode ser cancelado!');
+							if (id_pedido_selecionado != null) {
+								if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
+									if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
+										if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "1" || document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
+											alert('Registro selecionado já foi confirmado e ou registrado problema!');
+											return false;
+										}
+										if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
+											alert('Registro selecionado já foi cancelado, portanto não pode ser confirmado!');
+											return false;
+										}
+									}
+								}	
+							}
+							if (!selecionado) {
+								alert('Registro não selecionado para ser confirmado!');
 								return false;
+							} else {
+				  				document.myform2.action = "{{ .Host }}/CadastroPedido";
+							}
+	     			} else if (document.pressed == 'Cancelar') {
+							id_pedido_selecionado = null;
+							selecionado = false;
+							for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+								if (document.getElementsByName("id_pedido")[i].checked) {
+									selecionado = true;
+									id_pedido_selecionado = i;
+								}
+							}
+							if (id_pedido_selecionado != null) {
+								if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
+									if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
+										if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
+											alert('Registro selecionado já foi cancelado!');
+											return false;
+										}
+										if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "1" || document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
+											alert('Registro selecionado já foi confirmado e ou registrado problema, portanto não pode ser cancelado!');
+											return false;
+										}
+									}
+								}	
+							}
+							if (!selecionado) {
+								alert('Registro não selecionado para ser cancelado!');
+								return false;
+							} else {
+				  				document.myform2.action = "{{ .Host }}/CadastroPedido";
+							}
+	     			} else if (document.pressed == 'Registrar problema') {
+							id_pedido_selecionado = null;
+							selecionado = false;
+							for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+								if (document.getElementsByName("id_pedido")[i].checked) {
+									selecionado = true;
+									id_pedido_selecionado = i;
+								}
+							}
+							if (id_pedido_selecionado != null) {
+								if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
+									if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
+										if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
+											alert('Registro selecionado já foi registrado problema!');
+											return false;
+										}
+										if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
+											alert('Registro selecionado já foi cancelado, portanto não pode registrado problema!');
+											return false;
+										}
+										if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "1") {
+											alert('Registro de problema só é possivel para pedidos confirmados, portanto não pode ser registrado problema para este pedido!');
+											return false;
+										}
+									}
+								}	
+							}
+							if (!selecionado) {
+								alert('Registro não selecionado para ser registrado problema!');
+								return false;
+							} else {
+				  				document.myform2.action = "{{ .Host }}/CadastroPedido";
+							}
+	     			} else if (document.pressed == 'Alterar') {
+						id_pedido_selecionado = null;
+						selecionado = false;
+						if ((document.getElementsByName("id_glp")[0].value == null ||  
+							document.getElementsByName("id_glp")[0].value == "")) {
+							selecionado = true;
+						}
+						if ((document.getElementsByName("quantidade")[0].value == null ||  
+							document.getElementsByName("quantidade")[0].value == "")) {
+							selecionado = true;
+						}
+						if ((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||  
+							document.getElementsByName("flg_prioridade_pedido")[0].value == "")) {
+							selecionado = true;
+						}
+						if ((document.getElementsByName("flg_hora")[0].value == null ||  
+							document.getElementsByName("flg_hora")[0].value == "")) {
+							selecionado = true;
+						}
+						if (!selecionado) {
+							alert('Glp, prioridade, horário e ou quantidade não preenchidos!');
+							return false;
+						} else {
+							selecionado = false;
+							for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
+								if (document.getElementsByName("id_pedido")[i].checked) {
+									selecionado = true;
+									id_pedido_selecionado = i;
+								}
+							}
+							if (!selecionado) {
+								alert('Registro não selecionado para ser alterado!');
+								return false;
+							} else {
+								if (!((document.getElementsByName("id_glp")[0].value == null ||
+									document.getElementsByName("id_glp")[0].value == ""))) {
+										document.getElementsByName("id_glp_myform1")[0].value = 
+											document.getElementsByName("id_glp")[0].value;
+								}
+								if (!((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||
+									document.getElementsByName("flg_prioridade_pedido")[0].value == ""))) {
+										document.getElementsByName("flg_prioridade_pedido_myform1")[0].value = 
+											document.getElementsByName("flg_prioridade_pedido")[0].value;
+								}
+								if (!((document.getElementsByName("quantidade")[0].value == null ||
+									document.getElementsByName("quantidade")[0].value == ""))) {
+										document.getElementsByName("quantidade_myform1")[0].value = 
+											document.getElementsByName("quantidade")[0].value;
+								}
+								if (!((document.getElementsByName("flg_hora")[0].value == null ||
+									document.getElementsByName("flg_hora")[0].value == ""))) {
+										document.getElementsByName("flg_hora_myform1")[0].value = 
+											document.getElementsByName("flg_hora")[0].value;
+								}
+								document.myform2.action = "{{ .Host }}/CadastroPedido";
 							}
 						}
-					}	
+	     			}
+	     			return true;
 				}
-				if (!selecionado) {
-					alert('Registro não selecionado para ser cancelado!');
-					return false;
-				} else {
-				  	document.myform2.action = "{{ .Host }}/CadastroPedido";
-				}
-	     } else if (document.pressed == 'Registrar problema') {
-				id_pedido_selecionado = null;
-				selecionado = false;
-				for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
-					if (document.getElementsByName("id_pedido")[i].checked) {
-						selecionado = true;
-						id_pedido_selecionado = i;
-					}
-				}
-				if (id_pedido_selecionado != null) {
-					if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != null) {
-						if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "") {
-							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "3") {
-								alert('Registro selecionado já foi registrado problema!');
-								return false;
-							}
-							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value == "2") {
-								alert('Registro selecionado já foi cancelado, portanto não pode registrado problema!');
-								return false;
-							}
-							if (document.getElementsByName("flg_status_myform1")[id_pedido_selecionado].value != "1") {
-								alert('Registro de problema só é possivel para pedidos confirmados, portanto não pode ser registrado problema para este pedido!');
-								return false;
-							}
-						}
-					}	
-				}
-				if (!selecionado) {
-					alert('Registro não selecionado para ser registrado problema!');
-					return false;
-				} else {
-				  	document.myform2.action = "{{ .Host }}/CadastroPedido";
-				}
-	     } else if (document.pressed == 'Alterar') {
-			id_pedido_selecionado = null;
-			selecionado = false;
-			if ((document.getElementsByName("id_glp")[0].value == null ||  
-				document.getElementsByName("id_glp")[0].value == "")) {
-				selecionado = true;
-			}
-			if ((document.getElementsByName("quantidade")[0].value == null ||  
-				document.getElementsByName("quantidade")[0].value == "")) {
-				selecionado = true;
-			}
-			if ((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||  
-				document.getElementsByName("flg_prioridade_pedido")[0].value == "")) {
-				selecionado = true;
-			}
-			if ((document.getElementsByName("flg_hora")[0].value == null ||  
-				document.getElementsByName("flg_hora")[0].value == "")) {
-				selecionado = true;
-			}
-			if (!selecionado) {
-				alert('Glp, prioridade, horário e ou quantidade não preenchidos!');
-				return false;
-			} else {
-				selecionado = false;
-				for (var i = 0; i < document.getElementsByName("id_pedido").length; i++) {
-					if (document.getElementsByName("id_pedido")[i].checked) {
-						selecionado = true;
-						id_pedido_selecionado = i;
-					}
-				}
-				if (!selecionado) {
-					alert('Registro não selecionado para ser alterado!');
-					return false;
-				} else {
-					if (!((document.getElementsByName("id_glp")[0].value == null ||
-						document.getElementsByName("id_glp")[0].value == ""))) {
-							document.getElementsByName("id_glp_myform1")[0].value = 
-								document.getElementsByName("id_glp")[0].value;
-					}
-					if (!((document.getElementsByName("flg_prioridade_pedido")[0].value == null ||
-						document.getElementsByName("flg_prioridade_pedido")[0].value == ""))) {
-							document.getElementsByName("flg_prioridade_pedido_myform1")[0].value = 
-								document.getElementsByName("flg_prioridade_pedido")[0].value;
-					}
-					if (!((document.getElementsByName("quantidade")[0].value == null ||
-						document.getElementsByName("quantidade")[0].value == ""))) {
-							document.getElementsByName("quantidade_myform1")[0].value = 
-								document.getElementsByName("quantidade")[0].value;
-					}
-					if (!((document.getElementsByName("flg_hora")[0].value == null ||
-						document.getElementsByName("flg_hora")[0].value == ""))) {
-							document.getElementsByName("flg_hora_myform1")[0].value = 
-								document.getElementsByName("flg_hora")[0].value;
-					}
-					document.myform2.action = "{{ .Host }}/CadastroPedido";
-				}
-			}
-	     }
-	     return true;
-	}
-	</script>
+				</script>
 
 			<div id="content_top"></div>
 			<div id="content_main">
 				<form name="myform1" onsubmit="return onsubmitform();">
-					<input type="hidden" name="id_cliente" value="<%out.println(id_cliente);%>"> 
 					<input type="hidden" name="flg_origem_pedido" value="1"> 
+					<h1>
+					Cliente&nbsp;:&nbsp;<select name="id_cliente" selecionado>
+							<option value=""></option>
+							{{range $key1, $value1 := .Cliente }}
+								{{if $value1}}
+									{{range $key2, $value2 := .}}
+										{{if $key2}}
+											{{if $value2}}
+												{{if eq $key2 1}}
+							<option value="{{$value2}}">
+												{{end}}
+												{{if eq $key2 2}}
+							{{$value2}}</option>
+												{{end}}
+											{{end}}
+										{{end}}
+									{{end}}
+								{{end}}
+							{{end}}
+						</select>
+					</h1>
+					<h1>
+					Glp&nbsp;:&nbsp;<select name="id_glp" selecionado>
+							<option value=""></option>
+							{{range $key1, $value1 := .Glp }}
+								{{if $value1}}
+									{{range $key2, $value2 := .}}
+										{{if $key2}}
+											{{if $value2}}
+												{{if eq $key2 1}}
+							<option value="{{$value2}}">
+												{{end}}
+												{{if eq $key2 2}}
+							{{$value2}}</option>
+												{{end}}
+											{{end}}
+										{{end}}
+									{{end}}
+								{{end}}
+							{{end}}
+						</select>
+					</h1>
 								<h1>
-									Glp&nbsp;:&nbsp;<input type="text" name="glp">
-									<h1>
 										Quantidade&nbsp;:&nbsp;<input type="number" name="quantidade" min="1" step="1" max="100" value="1">
 									</h1>
 									<h1>
