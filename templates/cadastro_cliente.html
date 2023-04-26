@@ -93,6 +93,12 @@
 						if (document.getElementsByName("operation")[i].value == "Alterar") {
 							document.getElementsByName("operation")[i].disabled = false;
 						}
+						if (document.getElementsByName("operation")[i].value == "Pedido") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
+						if (document.getElementsByName("operation")[i].value == "copyToClipboard") {
+							document.getElementsByName("operation")[i].disabled = false;
+						}
 					}
 					for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
 						if (document.getElementsByName("name_radio")[i].checked) {
@@ -130,6 +136,12 @@
 							document.getElementsByName("operation")[i].disabled = false;
 						}
 						if (document.getElementsByName("operation")[i].value == "Alterar") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "Pedido") {
+							document.getElementsByName("operation")[i].disabled = true;
+						}
+						if (document.getElementsByName("operation")[i].value == "copyToClipboard") {
 							document.getElementsByName("operation")[i].disabled = true;
 						}
 					}
@@ -204,6 +216,15 @@
 								}
 							}
 						}
+					} else if (document.pressed == 'Pedido') {
+						var i;
+						for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
+							if (document.getElementsByName("name_radio")[i].checked) {
+								break;
+							}
+						}
+						alert("{{ .Host }}/CadastroPedido?id_cliente=" + document.getElementsByName("name_radio")[i].value);
+						document.myform1.action = "{{ .Host }}/CadastroPedido?id_cliente=" + document.getElementsByName("name_radio")[i].value;
 					}
 					return true;
 				}
@@ -310,7 +331,13 @@
 									</h1>
 								</td>
 								<td>
-					<button id="demo" onclick="copyToClipboard(document.getElementById('demo').innerHTML)">Copiar URL</button>
+									<h1>
+										<input type="submit" name="operation"
+											onclick="document.pressed=this.value" value="Pedido" disabled>
+									</h1>
+								</td>
+								<td>
+					<button id="demo" name="operation" onclick="copyToClipboard(document.getElementById('demo').innerHTML)" value="copyToClipboard" disabled>Copiar URL</button>
 								</td>
 							</tr>
 						</table> <br><br><br>
@@ -354,6 +381,9 @@
 										{{if eq $key2 12}}
 										{{end}}
 										{{if eq $key2 13}}
+											<td>{{$value2}}</td>
+										{{end}}
+										{{if eq $key2 14}}
 											<!-- <td>{{$value2}}</td> disable show ts -->
 											</tr>
 										{{end}}
@@ -415,6 +445,9 @@
 								<input type="hidden" name="flg_aviso_gas_final_hidden" value="{{$value2}}"> 
 								{{end}}
 								{{if eq $key2 13}}
+								<input type="hidden" name="key_id_hidden" value="{{$value2}}"> 
+								{{end}}
+								{{if eq $key2 14}}
 								{{end}}
 							{{end}}
 						{{end}}

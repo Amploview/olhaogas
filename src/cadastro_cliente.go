@@ -52,7 +52,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		}
 
 	}
-	cmd = "select * from (select row_number() over (order by cliente.id) rownum, cliente.id as id, nome, id_area, area.descricao as descricao_area, cep, endereco, ponto_de_referencia, ddi, ddd, telefone, email, flg_aviso_gas_final, cliente.ts as ts from cliente, area where cliente.id_area = area.id order by cliente.id) " + where + " order by rownum desc"
+	cmd = "select * from (select row_number() over (order by cliente.id) rownum, cliente.id as id, nome, id_area, area.descricao as descricao_area, cep, endereco, ponto_de_referencia, ddi, ddd, telefone, email, flg_aviso_gas_final, key_id, cliente.ts as ts from cliente, area where cliente.id_area = area.id order by cliente.id) " + where + " order by rownum desc"
 	rows, err := d.db.Query(cmd)
 	println(cmd)
 	if err != nil {
@@ -75,9 +75,10 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		var telefone int
 		var email string
 		var flg_aviso_gas_final int
+		var key_id int
 		var ts string
 		var rownum int
-		err = rows.Scan(&rownum, &id, &nome, &id_area, &descricao_area, &cep, &endereco, &ponto_de_referencia, &ddi, &ddd, &telefone, &email, &flg_aviso_gas_final, &ts)
+		err = rows.Scan(&rownum, &id, &nome, &id_area, &descricao_area, &cep, &endereco, &ponto_de_referencia, &ddi, &ddd, &telefone, &email, &flg_aviso_gas_final, &key_id, &ts)
 		if err != nil {
 			println(err)
 		}
@@ -94,7 +95,8 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		d.TabelaDados[row][10] = strconv.Itoa(telefone)
 		d.TabelaDados[row][11] = email
 		d.TabelaDados[row][12] = strconv.Itoa(flg_aviso_gas_final)
-		d.TabelaDados[row][13] = ts
+		d.TabelaDados[row][13] = strconv.Itoa(key_id)
+		d.TabelaDados[row][14] = ts
 		row++
 		if row >= sizeRows {
 			rows.Close()
@@ -119,6 +121,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		var telefone string
 		var email string
 		var flg_aviso_gas_final string
+		var key_id string
 		id = d.TabelaDados[row][1]
 		nome = r.Form.Get("nome")
 		id_area = r.Form.Get("id_area")
@@ -130,6 +133,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 		telefone = r.Form.Get("telefone")
 		email = r.Form.Get("email")
 		flg_aviso_gas_final = r.Form.Get("flg_aviso_gas_final")
+		key_id = r.Form.Get("key_id")
 		if contains(radioSelected, d.TabelaDados[row][0]) {
 			if r.Form.Get("operation") == "Alterar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
@@ -143,7 +147,8 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 					d.TabelaDados[row][9] + "/" +
 					d.TabelaDados[row][10] + "/" +
 					d.TabelaDados[row][11] + "/" +
-					d.TabelaDados[row][12] +
+					d.TabelaDados[row][12] + "/" +
+					d.TabelaDados[row][13] +
 					" para " +
 					nome + "/" +
 					id_area + "/" +
@@ -154,7 +159,8 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 					ddd + "/" +
 					telefone + "/" +
 					email + "/" +
-					flg_aviso_gas_final + "!")
+					flg_aviso_gas_final + "/" +
+					key_id + "!")
 				cmd = "update cliente set nome = '" + nome +
 					"', id_area = " + id_area +
 					", cep = " + cep +
@@ -165,6 +171,7 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 					", telefone = " + telefone +
 					", email = '" + email +
 					"', flg_aviso_gas_final = " + flg_aviso_gas_final +
+					", key_id = " + key_id +
 					", ts = CURRENT_TIMESTAMP where id = " + id
 				_, err := d.db.Exec(cmd)
 				println(cmd)
@@ -180,7 +187,8 @@ func cadastro_cliente(w http.ResponseWriter, r *http.Request, html string, d *da
 				d.TabelaDados[row][9] = ddd
 				d.TabelaDados[row][10] = telefone
 				d.TabelaDados[row][11] = email
-				d.TabelaDados[row][12] = flg_aviso_gas_final
+				d.TabelaDados[row][12] = key_id
+				d.TabelaDados[row][13] = flg_aviso_gas_final
 				row_sav = row
 			} else if r.Form.Get("operation") == "Eliminar" {
 				println(d.TabelaDados[row][1] + " foi selecionado!")
