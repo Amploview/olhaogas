@@ -320,27 +320,6 @@
 				<form name="myform1" onsubmit="return onsubmitform();">
 					<input type="hidden" name="flg_origem_pedido" value="1"> 
 					<h1>
-					Cliente&nbsp;:&nbsp;<select name="id_cliente" selecionado>
-							<option value=""></option>
-							{{range $key1, $value1 := .Cliente }}
-								{{if $value1}}
-									{{range $key2, $value2 := .}}
-										{{if $key2}}
-											{{if $value2}}
-												{{if eq $key2 1}}
-							<option value="{{$value2}}">
-												{{end}}
-												{{if eq $key2 2}}
-							{{$value2}}</option>
-												{{end}}
-											{{end}}
-										{{end}}
-									{{end}}
-								{{end}}
-							{{end}}
-						</select>
-					</h1>
-					<h1>
 					Glp&nbsp;:&nbsp;<select name="id_glp" selecionado>
 							<option value=""></option>
 							{{range $key1, $value1 := .Glp }}

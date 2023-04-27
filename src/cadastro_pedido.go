@@ -18,13 +18,17 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 	//Aqui sera codificado a identificacao do cliente passada na URL para pegar o preco deste em sua area
 	if r.Form.Get("id_cliente") != "" {
 		d.id_cliente = r.Form.Get("id_cliente")
+		d.flg_origem_pedido = "1"
 	} else if r.Form.Get("id_cliente_hidden") != "" {
 		d.id_cliente = r.Form.Get("id_cliente_hidden")
+		d.flg_origem_pedido = "0"
 	}
 	if r.Form.Get("key_id") != "" {
 		d.key_id = r.Form.Get("key_id")
+		d.flg_origem_pedido = "1"
 	} else if r.Form.Get("key_id_hidden") != "" {
 		d.key_id = r.Form.Get("key_id_hidden")
+		d.flg_origem_pedido = "0"
 	}
 	println("Cliente          : " + d.id_cliente)
 	println("Key_id           : " + d.key_id)
@@ -33,9 +37,67 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 			d.TabelaDados[i][j] = ""
 		}
 	}
+	cmd = "select * from (select row_number() over (order by id) rownum, id_area from cliente where id = " + d.id_cliente + " and key_id = " + d.key_id + " order by id)"
+	rows, err := d.db.Query(cmd)
+	println(cmd)
+	if err != nil {
+		println(err)
+	}
+	var row int32
+	var id_area int
+	row = 0
+	for rows.Next() {
+		var rownum int
+		err = rows.Scan(&rownum, &id_area)
+		if err != nil {
+			println(err)
+		}
+		if err != nil {
+			println(err)
+		}
+		row++
+	}
+	err = rows.Err()
+	if err != nil {
+		println(err)
+	}
+	defer rows.Close()
+	println("Id_area          : " + strconv.Itoa(id_area))
 	if r.Form.Get("operation") == "Inserir" {
-		cmd = "insert into pedido(id_cliente, quantidade, id_glp_preco_area, valor_pedido, flg_prioridade_pedido, flg_hora) values (" + r.Form.Get("id_cliente_hidden") + ", " + r.Form.Get("quantidade") + ", " + r.Form.Get("id_glp_preco_area_hidden") + ", " + r.Form.Get("valor_pedido") + ", " + r.Form.Get("flg_prioridade_pedido") + ", " + r.Form.Get("flg_hora") + ")"
-		_, err := d.db.Exec(cmd)
+		cmd = "select * from (select row_number() over (order by id) rownum, id as id_glp_preco_area, preco from glp_preco_area where id_area = " + strconv.Itoa(id_area) + " and id_glp = " + r.Form.Get("id_glp") + " order by id desc)"
+		rows, err := d.db.Query(cmd)
+		println(cmd)
+		if err != nil {
+			println(err)
+		}
+		var row int32
+		var id_glp_preco_area int
+		var preco float32
+		row = 0
+		for rows.Next() {
+			var rownum int
+			err = rows.Scan(&rownum, &id_glp_preco_area, &preco)
+			if err != nil {
+				println(err)
+			}
+			if err != nil {
+				println(err)
+			}
+			row++
+			if row >= 1 {
+				rows.Close()
+				break
+			}
+		}
+		err = rows.Err()
+		if err != nil {
+			println(err)
+		}
+		defer rows.Close()
+		var quantidade int
+		quantidade, _ = strconv.Atoi(r.Form.Get("quantidade"))
+		cmd = "insert into pedido(id_cliente, quantidade, id_glp_preco_area, valor_pedido, flg_prioridade_pedido, flg_origem_pedido, flg_hora) values (" + d.id_cliente + ", " + r.Form.Get("quantidade") + ", " + fmt.Sprint(id_glp_preco_area) + ", " + fmt.Sprint(preco*float32(quantidade)) + ", " + r.Form.Get("flg_prioridade_pedido") + ", " + d.flg_origem_pedido + ", " + r.Form.Get("flg_hora") + ")"
+		_, err = d.db.Exec(cmd)
 		println(cmd)
 		if err != nil {
 			println(err)
@@ -52,14 +114,6 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 			if r.Form.Get("id_glp_preco") != "" {
 				where += " where id_glp_preco = " + r.Form.Get("id_glp_preco")
 			}
-		}
-		if r.Form.Get("quantidade") != "" {
-			if where != "" {
-				where += " and "
-			} else {
-				where += " where "
-			}
-			where += "quantidade = " + r.Form.Get("quantidade")
 		}
 		if r.Form.Get("flg_prioridade_pedido") != "" {
 			if where != "" {
@@ -79,22 +133,21 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		}
 
 	}
-	cmd = "select * from (select row_number() over (order by pedido.id) rownum, id_cliente, cliente.nome as nome_cliente, quantidade, id_glp_preco_area, glp_preco_area.preco as preco_area, valor_pedido, flg_prioridade_pedido, txt_flg_prioridade_pedido.descricao as descricao_flg_prioridade_pedido, flg_hora, txt_flg_hora.descricao as descricao_flg_hora, pedido.ts as ts from pedido, glp_preco_area, cliente, (SELECT 0 as id, 'Hoje' as descricao union SELECT 1 as id, 'Amanhã' as descricao) txt_flg_prioridade_pedido, (SELECT 0 as id, 'Hoje' as descricao union SELECT 1 as id, 'Amanhã' as descricao) txt_flg_hora where pedido.id_glp_preco_area = glp_preco_area.id and pedido.id_cliente = cliente.id and pedido.flg_prioridade_pedido = txt_flg_prioridade_pedido.id and pedido.flg_hora = txt_flg_hora.id order by pedido.id) " + where + " order by rownum desc"
-	rows, err := d.db.Query(cmd)
+	cmd = "select * from (select row_number() over (order by pedido.id) rownum, pedido.id as id, id_cliente, cliente.nome as nome_cliente, quantidade, id_glp_preco_area, glp_preco_area.preco as preco_area, valor_pedido, flg_prioridade_pedido, txt_flg_prioridade_pedido.descricao as descricao_flg_prioridade_pedido, flg_hora, txt_flg_hora.descricao as descricao_flg_hora, pedido.ts as ts from pedido, glp_preco_area, cliente, (SELECT 0 as id, 'Hoje' as descricao union SELECT 1 as id, 'Amanhã' as descricao) txt_flg_prioridade_pedido, (SELECT 0 as id, 'Qualquer hora' as descricao union SELECT 1 as id, '8 horas' as descricao union SELECT 2 as id, '9 horas' as descricao union SELECT 3 as id, '10 horas' as descricao union SELECT 4 as id, '11 horas' as descricao union SELECT 5 as id, '12 horas' as descricao union SELECT 6 as id, '13 horas' as descricao union SELECT 7 as id, '14 horas' as descricao union SELECT 8 as id, '15 horas' as descricao union SELECT 9 as id, '16 horas' as descricao union SELECT 10 as id, '17 horas' as descricao union SELECT 11 as id, '18 horas' as descricao union SELECT 12 as id, '19 horas' as descricao union SELECT 13 as id, '20 horas' as descricao) txt_flg_hora where pedido.id_glp_preco_area = glp_preco_area.id and pedido.id_cliente = cliente.id and pedido.flg_prioridade_pedido = txt_flg_prioridade_pedido.id and pedido.flg_hora = txt_flg_hora.id order by pedido.id) " + where + " order by rownum desc"
+	rows, err = d.db.Query(cmd)
 	println(cmd)
 	if err != nil {
 		println(err)
 	}
 	var row_sav int
 	row_sav = -1
-	var row int32
 	row = 0
 	for rows.Next() {
 		var id int
 		var id_cliente int
 		var nome_cliente string
 		var quantidade int
-		var id_preco_area int
+		var id_glp_preco_area int
 		var preco_area float32
 		var valor_pedido float32
 		var flg_prioridade_pedido int
@@ -103,7 +156,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		var descricao_flg_hora string
 		var ts string
 		var rownum int
-		err = rows.Scan(&rownum, &id, &id_cliente, &nome_cliente, &quantidade, &id_preco_area, &preco_area, &valor_pedido, &flg_prioridade_pedido, &descricao_flg_prioridade_pedido, &flg_hora, &descricao_flg_hora, &ts)
+		err = rows.Scan(&rownum, &id, &id_cliente, &nome_cliente, &quantidade, &id_glp_preco_area, &preco_area, &valor_pedido, &flg_prioridade_pedido, &descricao_flg_prioridade_pedido, &flg_hora, &descricao_flg_hora, &ts)
 		if err != nil {
 			println(err)
 		}
@@ -112,7 +165,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		d.TabelaDados[row][2] = strconv.Itoa(id_cliente)
 		d.TabelaDados[row][3] = nome_cliente
 		d.TabelaDados[row][4] = strconv.Itoa(quantidade)
-		d.TabelaDados[row][5] = strconv.Itoa(id_preco_area)
+		d.TabelaDados[row][5] = strconv.Itoa(id_glp_preco_area)
 		d.TabelaDados[row][6] = fmt.Sprint(preco_area)
 		d.TabelaDados[row][7] = fmt.Sprint(valor_pedido)
 		d.TabelaDados[row][8] = strconv.Itoa(flg_prioridade_pedido)

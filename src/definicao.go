@@ -3,7 +3,7 @@ package main
 import "database/sql"
 
 const sizeCols = 15
-const sizeRows = 15
+const sizeRows = 30
 
 type data struct {
 	Title            string
@@ -27,8 +27,9 @@ type data struct {
 	//Amanhã
 	Flg_Hora [14][3]string //comportar rownum, id, descricao :: Tabela criada hardcoded
 	//8 horas ... 20 horas
-	id_cliente string
-	key_id     string
+	id_cliente        string
+	key_id            string
+	flg_origem_pedido string
 }
 
 func contains(slice []string, item string) bool {

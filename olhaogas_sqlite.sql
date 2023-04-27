@@ -282,11 +282,11 @@ CREATE TABLE IF NOT EXISTS `pedido` (
   `quantidade` integer(4) NOT NULL,
   `id_glp_preco_area` integer(11) NOT NULL,
   `valor_pedido` decimal(10,2) NOT NULL,
-  `data_pedido` date NOT NULL,
+  `data_pedido` date NOT NULL DEFAULT CURRENT_DATE,
   `flg_prioridade_pedido` integer(1) NOT NULL,
-  `flg_origem_pedido` integer(1) NOT NULL,
-  `flg_hora` integer(2) NOT NULL,
-  `flg_status` integer(1) NOT NULL DEFAULT '0', --0 Efetuado, 1-Entregue, 2-Pago e 3-Devolvido
+  `flg_origem_pedido` integer(1) NOT NULL, --0-Administrador, 1-Cliente
+  `flg_hora` integer(2) NOT NULL DEFAULT CURRENT_TIME, 
+  `flg_status` integer(1) NOT NULL DEFAULT '0', --0-Efetuado, 1-Entregue, 2-Pago e 3-Devolvido
   `data_status` datetime DEFAULT NULL,
   `ts` text NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(id_cliente) REFERENCES cliente(id),
