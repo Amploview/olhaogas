@@ -16,8 +16,18 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 	println("Operacao         : " + r.Form.Get("operation"))
 	println("Action           : " + strings.Trim(html, ".html"))
 	//Aqui sera codificado a identificacao do cliente passada na URL para pegar o preco deste em sua area
-	println("Cliente          : " + r.Form.Get("id_cliente"))
-	println("Key              : " + r.Form.Get("key_id"))
+	if r.Form.Get("id_cliente") != "" {
+		d.id_cliente = r.Form.Get("id_cliente")
+	} else if r.Form.Get("id_cliente_hidden") != "" {
+		d.id_cliente = r.Form.Get("id_cliente_hidden")
+	}
+	if r.Form.Get("key_id") != "" {
+		d.key_id = r.Form.Get("key_id")
+	} else if r.Form.Get("key_id_hidden") != "" {
+		d.key_id = r.Form.Get("key_id_hidden")
+	}
+	println("Cliente          : " + d.id_cliente)
+	println("Key_id           : " + d.key_id)
 	for i := 0; i < sizeRows; i++ {
 		for j := 0; j < sizeCols; j++ {
 			d.TabelaDados[i][j] = ""

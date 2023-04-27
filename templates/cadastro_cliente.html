@@ -220,11 +220,12 @@
 						var i;
 						for (var i = 0; i < document.getElementsByName("name_radio").length; i++) {
 							if (document.getElementsByName("name_radio")[i].checked) {
+								document.getElementsByName("id_cliente_hidden")[0].value =  document.getElementsByName("id_cliente_hidden")[i].value;
+								document.getElementsByName("key_id_hidden")[0].value =  document.getElementsByName("key_id_hidden")[i].value;
 								break;
 							}
 						}
-						alert("{{ .Host }}/CadastroPedido?id_cliente=" + document.getElementsByName("name_radio")[i].value);
-						document.myform1.action = "{{ .Host }}/CadastroPedido?id_cliente=" + document.getElementsByName("name_radio")[i].value;
+						document.myform1.action = "{{ .Host }}/CadastroPedido";
 					}
 					return true;
 				}
@@ -352,6 +353,7 @@
 							 	{{if $key2}}
 								 	{{if $value2}}
 										{{if eq $key2 1}}
+								<input type="hidden" name="id_cliente_hidden" value="{{$value2}}"> 
 										<!-- <td>{{$value2}}</td> disabled show id -->
 										{{end}}
 										{{if eq $key2 2}}
@@ -381,6 +383,7 @@
 										{{if eq $key2 12}}
 										{{end}}
 										{{if eq $key2 13}}
+								<input type="hidden" name="key_id_hidden" value="{{$value2}}"> 
 											<td>{{$value2}}</td>
 										{{end}}
 										{{if eq $key2 14}}
@@ -445,7 +448,6 @@
 								<input type="hidden" name="flg_aviso_gas_final_hidden" value="{{$value2}}"> 
 								{{end}}
 								{{if eq $key2 13}}
-								<input type="hidden" name="key_id_hidden" value="{{$value2}}"> 
 								{{end}}
 								{{if eq $key2 14}}
 								{{end}}

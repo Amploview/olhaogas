@@ -27,6 +27,8 @@ type data struct {
 	//Amanhã
 	Flg_Hora [14][3]string //comportar rownum, id, descricao :: Tabela criada hardcoded
 	//8 horas ... 20 horas
+	id_cliente string
+	key_id     string
 }
 
 func contains(slice []string, item string) bool {
