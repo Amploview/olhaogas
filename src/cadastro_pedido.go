@@ -102,38 +102,23 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		if err != nil {
 			println(err)
 		}
-		println("pedido " + r.Form.Get("id_glp") + "/" + r.Form.Get("id_cliente") + "/" + r.Form.Get("quantidade") + "/" + r.Form.Get("id_glp_preco_area") + "/" + r.Form.Get("valor_pedido") + "/" + r.Form.Get("flg_prioridade_pedido") + "/" + r.Form.Get("flg_hora") + " foi incluido!")
+		println("pedido " + r.Form.Get("id_glp") + "/" + d.id_cliente + "/" + r.Form.Get("quantidade") + "/" + r.Form.Get("id_glp_preco_area") + "/" + r.Form.Get("valor_pedido") + "/" + r.Form.Get("flg_prioridade_pedido") + "/" + r.Form.Get("flg_hora") + " foi incluido!")
 	}
 	var where string
-	where = ""
+	where = " where id_cliente = " + d.id_cliente
 	if r.Form.Get("operation") == "Localizar" {
-		if r.Form.Get("id_cliente") != "" {
-			where += " where id_cliente = " + r.Form.Get("id_cliente")
-		}
-		if r.Form.Get("id_glp_preco") != "" {
-			if r.Form.Get("id_glp_preco") != "" {
-				where += " where id_glp_preco = " + r.Form.Get("id_glp_preco")
-			}
+		if r.Form.Get("id_glp") != "" {
+			where += " and id_glp = " + r.Form.Get("id_glp")
 		}
 		if r.Form.Get("flg_prioridade_pedido") != "" {
-			if where != "" {
-				where += " and "
-			} else {
-				where += " where "
-			}
-			where += "flg_prioridade_pedido = " + r.Form.Get("flg_prioridade_pedido")
+			where += " and flg_prioridade_pedido = " + r.Form.Get("flg_prioridade_pedido")
 		}
 		if r.Form.Get("flg_hora") != "" {
-			if where != "" {
-				where += " and "
-			} else {
-				where += " where "
-			}
-			where += "flg_hora = " + r.Form.Get("flg_hora")
+			where += " and flg_hora = " + r.Form.Get("flg_hora")
 		}
 
 	}
-	cmd = "select * from (select row_number() over (order by pedido.id) rownum, pedido.id as id, id_cliente, cliente.nome as nome_cliente, quantidade, id_glp_preco_area, glp_preco_area.preco as preco_area, valor_pedido, flg_prioridade_pedido, txt_flg_prioridade_pedido.descricao as descricao_flg_prioridade_pedido, flg_hora, txt_flg_hora.descricao as descricao_flg_hora, pedido.ts as ts from pedido, glp_preco_area, cliente, (SELECT 0 as id, 'Hoje' as descricao union SELECT 1 as id, 'Amanhã' as descricao) txt_flg_prioridade_pedido, (SELECT 0 as id, 'Qualquer hora' as descricao union SELECT 1 as id, '8 horas' as descricao union SELECT 2 as id, '9 horas' as descricao union SELECT 3 as id, '10 horas' as descricao union SELECT 4 as id, '11 horas' as descricao union SELECT 5 as id, '12 horas' as descricao union SELECT 6 as id, '13 horas' as descricao union SELECT 7 as id, '14 horas' as descricao union SELECT 8 as id, '15 horas' as descricao union SELECT 9 as id, '16 horas' as descricao union SELECT 10 as id, '17 horas' as descricao union SELECT 11 as id, '18 horas' as descricao union SELECT 12 as id, '19 horas' as descricao union SELECT 13 as id, '20 horas' as descricao) txt_flg_hora where pedido.id_glp_preco_area = glp_preco_area.id and pedido.id_cliente = cliente.id and pedido.flg_prioridade_pedido = txt_flg_prioridade_pedido.id and pedido.flg_hora = txt_flg_hora.id order by pedido.id) " + where + " order by rownum desc"
+	cmd = "select * from (select row_number() over (order by pedido.id) rownum, pedido.id as id, id_cliente, cliente.nome as nome_cliente, quantidade, id_glp_preco_area, glp_preco_area.id_glp as id_glp, glp_preco_area.preco as preco_area, valor_pedido, flg_prioridade_pedido, txt_flg_prioridade_pedido.descricao as descricao_flg_prioridade_pedido, flg_hora, txt_flg_hora.descricao as descricao_flg_hora, pedido.ts as ts from pedido, glp_preco_area, cliente, (SELECT 0 as id, 'Hoje' as descricao union SELECT 1 as id, 'Amanhã' as descricao) txt_flg_prioridade_pedido, (SELECT 0 as id, 'Qualquer hora' as descricao union SELECT 1 as id, '8 horas' as descricao union SELECT 2 as id, '9 horas' as descricao union SELECT 3 as id, '10 horas' as descricao union SELECT 4 as id, '11 horas' as descricao union SELECT 5 as id, '12 horas' as descricao union SELECT 6 as id, '13 horas' as descricao union SELECT 7 as id, '14 horas' as descricao union SELECT 8 as id, '15 horas' as descricao union SELECT 9 as id, '16 horas' as descricao union SELECT 10 as id, '17 horas' as descricao union SELECT 11 as id, '18 horas' as descricao union SELECT 12 as id, '19 horas' as descricao union SELECT 13 as id, '20 horas' as descricao) txt_flg_hora where pedido.id_glp_preco_area = glp_preco_area.id and pedido.id_cliente = cliente.id and pedido.flg_prioridade_pedido = txt_flg_prioridade_pedido.id and pedido.flg_hora = txt_flg_hora.id order by pedido.id) " + where + " order by rownum desc"
 	rows, err = d.db.Query(cmd)
 	println(cmd)
 	if err != nil {
@@ -148,6 +133,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		var nome_cliente string
 		var quantidade int
 		var id_glp_preco_area int
+		var id_glp int
 		var preco_area float32
 		var valor_pedido float32
 		var flg_prioridade_pedido int
@@ -156,7 +142,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		var descricao_flg_hora string
 		var ts string
 		var rownum int
-		err = rows.Scan(&rownum, &id, &id_cliente, &nome_cliente, &quantidade, &id_glp_preco_area, &preco_area, &valor_pedido, &flg_prioridade_pedido, &descricao_flg_prioridade_pedido, &flg_hora, &descricao_flg_hora, &ts)
+		err = rows.Scan(&rownum, &id, &id_cliente, &nome_cliente, &quantidade, &id_glp_preco_area, &id_glp, &preco_area, &valor_pedido, &flg_prioridade_pedido, &descricao_flg_prioridade_pedido, &flg_hora, &descricao_flg_hora, &ts)
 		if err != nil {
 			println(err)
 		}
@@ -166,13 +152,14 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		d.TabelaDados[row][3] = nome_cliente
 		d.TabelaDados[row][4] = strconv.Itoa(quantidade)
 		d.TabelaDados[row][5] = strconv.Itoa(id_glp_preco_area)
-		d.TabelaDados[row][6] = fmt.Sprint(preco_area)
-		d.TabelaDados[row][7] = fmt.Sprint(valor_pedido)
-		d.TabelaDados[row][8] = strconv.Itoa(flg_prioridade_pedido)
-		d.TabelaDados[row][9] = descricao_flg_prioridade_pedido
-		d.TabelaDados[row][10] = strconv.Itoa(flg_hora)
-		d.TabelaDados[row][11] = descricao_flg_hora
-		d.TabelaDados[row][12] = ts
+		d.TabelaDados[row][6] = strconv.Itoa(id_glp)
+		d.TabelaDados[row][7] = fmt.Sprint(preco_area)
+		d.TabelaDados[row][8] = fmt.Sprint(valor_pedido)
+		d.TabelaDados[row][9] = strconv.Itoa(flg_prioridade_pedido)
+		d.TabelaDados[row][10] = descricao_flg_prioridade_pedido
+		d.TabelaDados[row][11] = strconv.Itoa(flg_hora)
+		d.TabelaDados[row][12] = descricao_flg_hora
+		d.TabelaDados[row][13] = ts
 		row++
 		if row >= sizeRows {
 			rows.Close()
@@ -189,7 +176,8 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		var id string
 		var id_cliente string
 		var quantidade string
-		var id_preco_area string
+		var id_glp_preco_area string
+		var id_glp string
 		var valor_pedido string
 		var flg_prioridade_pedido string
 		var descricao_flg_prioridade_pedido string
@@ -211,13 +199,13 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 					" para " +
 					id_cliente + "/" +
 					quantidade + "/" +
-					id_preco_area + "/" +
+					id_glp_preco_area + "/" +
 					valor_pedido + "/" +
 					descricao_flg_prioridade_pedido + "/" +
 					descricao_flg_hora + "!")
 				cmd = "update pedido set id_cliente = " + id_cliente +
 					", quantidade = " + quantidade +
-					", id_preco_area = " + id_preco_area +
+					", id_glp_preco_area = " + id_glp_preco_area +
 					", valor_pedido = " + valor_pedido +
 					", flg_prioridade_pedido = " + flg_prioridade_pedido +
 					", flg_hora = " + flg_hora +
@@ -229,9 +217,10 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 				}
 				d.TabelaDados[row][2] = id_cliente
 				d.TabelaDados[row][4] = quantidade
-				d.TabelaDados[row][5] = id_preco_area
-				d.TabelaDados[row][7] = valor_pedido
-				d.TabelaDados[row][8] = flg_prioridade_pedido
+				d.TabelaDados[row][5] = id_glp_preco_area
+				d.TabelaDados[row][6] = id_glp
+				d.TabelaDados[row][8] = valor_pedido
+				d.TabelaDados[row][9] = flg_prioridade_pedido
 				d.TabelaDados[row][10] = flg_hora
 				row_sav = row
 			} else if r.Form.Get("operation") == "Eliminar" {
@@ -256,6 +245,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 				d.TabelaDados[row][10] = ""
 				d.TabelaDados[row][11] = ""
 				d.TabelaDados[row][12] = ""
+				d.TabelaDados[row][13] = ""
 			}
 		}
 		if contains(checkboxSelected, d.TabelaDados[row][0]) {
@@ -281,6 +271,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 				d.TabelaDados[row][10] = ""
 				d.TabelaDados[row][11] = ""
 				d.TabelaDados[row][12] = ""
+				d.TabelaDados[row][13] = ""
 			}
 		}
 	}
@@ -310,7 +301,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		d.Glp[row][1] = strconv.Itoa(id_glp)
 		d.Glp[row][2] = descricao_glp
 		if d.Glp[row][1] == r.Form.Get("id_glp") && row_sav > -1 {
-			d.TabelaDados[row_sav][6] = descricao_glp
+			d.TabelaDados[row_sav][6] = strconv.Itoa(id_glp)
 		}
 		if err != nil {
 			println(err)
@@ -386,7 +377,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		d.GlpPrecoArea[row][3] = strconv.Itoa(id_glp)
 		d.GlpPrecoArea[row][4] = fmt.Sprint(preco_area)
 		if d.GlpPrecoArea[row][1] == r.Form.Get("id_preco_area") && row_sav > -1 {
-			d.TabelaDados[row_sav][6] = fmt.Sprint(preco_area)
+			d.TabelaDados[row_sav][6] = strconv.Itoa(id_glp)
 		}
 		if err != nil {
 			println(err)
@@ -421,7 +412,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		d.Flg_Prioridade_Pedido[row][1] = strconv.Itoa(flg_prioridade_pedido)
 		d.Flg_Prioridade_Pedido[row][2] = descricao_flg_prioridade_pedido
 		if d.Flg_Prioridade_Pedido[row][1] == r.Form.Get("flg_prioridade_pedido") && row_sav > -1 {
-			d.TabelaDados[row_sav][9] = descricao_flg_prioridade_pedido
+			d.TabelaDados[row_sav][10] = descricao_flg_prioridade_pedido
 		}
 		if err != nil {
 			println(err)
@@ -456,7 +447,7 @@ func cadastro_pedido(w http.ResponseWriter, r *http.Request, html string, d *dat
 		d.Flg_Hora[row][1] = strconv.Itoa(flg_hora)
 		d.Flg_Hora[row][2] = descricao_flg_hora
 		if d.Flg_Hora[row][1] == r.Form.Get("flg_hora") && row_sav > -1 {
-			d.TabelaDados[row_sav][11] = descricao_flg_hora
+			d.TabelaDados[row_sav][12] = descricao_flg_hora
 		}
 		if err != nil {
 			println(err)
